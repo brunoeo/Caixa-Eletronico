@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 @SpringBootApplication
 public class CaixaEletronicoApplication {
 
+
 	public static void main(String[] args) {
 		SpringApplication.run(CaixaEletronicoApplication.class, args);
 	}
