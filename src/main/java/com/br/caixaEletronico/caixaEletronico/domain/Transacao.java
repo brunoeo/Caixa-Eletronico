@@ -1,5 +1,7 @@
 package com.br.caixaEletronico.caixaEletronico.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -7,24 +9,24 @@ import java.time.LocalDate;
 public class Transacao {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDate data;
     @Enumerated(EnumType.STRING)
     private TipoTransacao tipoTransacao;
     private Double valor;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    private Cliente cliente;
+    @JsonIgnore
+    private User user;
 
     public Transacao(){}
 
-    public Transacao(Long id, LocalDate data, TipoTransacao tipoTransacao, Double valor, Cliente cliente) {
+    public Transacao(Long id, LocalDate data, TipoTransacao tipoTransacao, Double valor, User user) {
         this.id = id;
         this.data = data;
         this.tipoTransacao = tipoTransacao;
         this.valor = valor;
-        this.cliente = cliente;
+        this.user = user;
     }
 
     public Long getId() {
@@ -59,11 +61,11 @@ public class Transacao {
         this.valor = valor;
     }
 
-    public Cliente getCliente() {
-        return cliente;
+    public User getUser() {
+        return user;
     }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
+    public void setCliente(User user) {
+        this.user = user;
     }
 }
