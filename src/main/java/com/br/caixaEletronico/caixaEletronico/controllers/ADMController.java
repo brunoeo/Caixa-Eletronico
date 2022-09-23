@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,9 +36,15 @@ public class ADMController {
     ADMService admService;
 
     @RequestMapping("home")
-    public String home(Model model){
+    public String home(Model model, Principal principal){
 
-        List<User> users = userRepository.findAll();
+        List<User> users = userRepository.findAllByOrderByUserNameAsc();
+        for (User user : users){
+            if (user.getUserName().equalsIgnoreCase(principal.getName())){
+                users.remove(user);
+                break;
+            }
+        }
         model.addAttribute("users", users);
         return "adm/home";
     }

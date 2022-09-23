@@ -5,7 +5,10 @@
         <div th:replace="~{base :: logo}"></div>
         <div class="container mt-3 col-sm-6">
                 <div class="card mb-3" th:each="user : ${users}">
-                        <div class="card-header alert-success" th:text="${user.userName}"></div>
+                        <th:block th:switch="${user.enable}">
+                                <div th:case="true" class="card-header alert-success" th:text="${user.userName}"></div>
+                                <div th:case="false" class="card-header alert-danger" th:text="${user.userName}"></div>
+                        </th:block>
                         <div class="card-body">
                                 <div class="row">
                                         <div class="col-12 col-sm-12 mb-3">
