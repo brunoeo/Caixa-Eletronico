@@ -3,5 +3,31 @@
 <head th:replace="~{base :: head}"></head>
 <body>
         <div th:replace="~{base :: logo}"></div>
+        <div class="container mt-3 col-sm-6">
+                <div class="card mb-3" th:each="user : ${users}">
+                        <div class="card-header alert-success" th:text="${user.userName}"></div>
+                        <div class="card-body">
+                                <div class="row">
+                                        <div class="col-12 col-sm-12 mb-3">
+                                                <div>CPF</div>
+                                                <div><input class="form-control" th:value="${user.cpf}" value="CPF do usuario" readonly/></div>
+                                                <div>Telefone</div>
+                                                <div><input class="form-control" th:value="${user.telefone}" value="Telefone do usuario" readonly/></div>
+                                                <div>
+                                                        <th:block th:switch="${user.enable}">
+                                                                <form th:action="@{/adm/ativaDesativa/{id}(id=${user.id})}" method="post">
+                                                                        <button th:case="true" onclick="document.querySelector('#form-permissao').submit()" class="btn btn-primary mt-3" type="submit">Desativar</button>
+                                                                        <button th:case="false" onclick="document.querySelector('#form-permissao').submit()" class="btn btn-primary mt-3" type="submit">Ativar</button>
+
+                                                                </form>
+                                                        </th:block>
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
+
+                </div>
+        </div>
+
 </body>
 </html>
