@@ -28,7 +28,10 @@ public class ClienteController {
 
 
     @RequestMapping("home")
-    public String home(){
+    public String home(Model model){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) auth.getPrincipal();
+        model.addAttribute(user);
         return "cliente/home";
     }
 

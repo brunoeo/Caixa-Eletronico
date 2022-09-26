@@ -81,6 +81,7 @@ public class RequisicaoNovoCliente {
         user.setCpf(this.cpf);
         user.setTelefone(this.telefone);
         user.setEndereco(this.endereco);
+        user.setSaldo(0.00);
         return user;
     }
 

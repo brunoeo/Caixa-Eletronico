@@ -29,6 +29,7 @@ public class User implements UserDetails {
     private String cpf;
     private Boolean enable;
 
+    private Double saldo;
 
 
     public String getUserName() {
@@ -154,5 +155,17 @@ public class User implements UserDetails {
 
     public void setEnable() {
         this.enable = !this.enable;
+    }
+
+    public void setEnable(Boolean enable) {
+        this.enable = enable;
+    }
+
+    public Double getSaldo() {
+        return saldo;
+    }
+
+    public void setSaldo(Double saldo) {
+        this.saldo = saldo;
     }
 }
