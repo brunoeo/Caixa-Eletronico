@@ -63,6 +63,7 @@ public class ADMController {
     public String novoADM(RequisicaoNovoADM requisicao){
         return "adm/formularioADM";
     }
+
     @PostMapping("ativaDesativa/{id}")
     public String ativaDesativa(@PathVariable Long id){
 
@@ -80,7 +81,6 @@ public class ADMController {
         if(result.hasErrors()){
             return "adm/formularioCliente";
         }
-
 
         User user = requisicao.toUser();
         Perfil perfil = perfilRepository.findByNome("CLIENTE");

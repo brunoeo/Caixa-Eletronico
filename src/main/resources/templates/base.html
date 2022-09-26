@@ -39,13 +39,12 @@
                 <div class="col" sec:authorize="hasAuthority('CLIENTE')">
                     <nav class="nav">
                         <a class="nav-link" th:href="@{/cliente/home}">Home</a>
-                        <a class="nav-link" th:href="@{/cliente/alterar}">Alterar Dados</a>
+                        <a class="nav-link" th:href="@{/cliente/formulario}">Alterar Dados</a>
                     </nav>
                 </div>
                 <div class="col" sec:authorize="hasAuthority('ADM')">
                     <nav class="nav">
                         <a class="nav-link" th:href="@{/adm/home}">Home</a>
-                        <a class="nav-link" th:href="@{/adm/alterar}">Alterar Dados</a>
                     </nav>
 
                     </div>

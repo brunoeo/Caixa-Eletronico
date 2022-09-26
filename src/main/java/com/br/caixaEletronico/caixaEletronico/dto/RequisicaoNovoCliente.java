@@ -9,6 +9,7 @@ import javax.validation.constraints.Size;
 
 public class RequisicaoNovoCliente {
 
+    private Long id;
     @NotBlank
     private String nome;
     @NotBlank
@@ -81,5 +82,24 @@ public class RequisicaoNovoCliente {
         user.setTelefone(this.telefone);
         user.setEndereco(this.endereco);
         return user;
+    }
+
+    public void toRequisicao(User user) {
+        this.nome = user.getUserName();
+        this.senha = user.getSenha();
+        this.numCartao = user.getNumCartao();
+        this.cpf = user.getCpf();
+        this.telefone = user.getTelefone();
+        this.endereco = user.getEndereco();
+        this.id = user.getId();
+    }
+
+    public void atualizaUser(User user){
+        user.setUserName(this.nome);
+        user.setSenha(new BCryptPasswordEncoder().encode(this.senha));
+        user.setNumCartao(this.numCartao);
+        user.setCpf(this.cpf);
+        user.setTelefone(this.telefone);
+        user.setEndereco(this.endereco);
     }
 }

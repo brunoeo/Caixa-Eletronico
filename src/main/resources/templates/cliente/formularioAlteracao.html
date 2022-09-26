@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="~{base :: head}"></head>
+<body>
+
+<div th:replace="~{base :: logo}"></div>
+
+<div class="container">
+
+	<div class="card mt-3">
+		<form th:object="${requisicaoNovoCliente}" class="card-body" th:action="@{/cliente/atualizaCliente}" method="POST">
+			<div class="form-group">
+				<label for="nome">Nome do Cliente</label>
+				<input th:field="*{nome}" th:errorclass="is-invalid" class="form-control" placeholder="Nome do cliente"/>
+				<small>Informe qual o nome do cliente.</small>
+				<div class="invalid-feedback" th:errors="*{nome}">
+					Erros no nome do cliente
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="cpf">CPF</label>
+				<input th:field="*{cpf}" th:errorclass="is-invalid" class="form-control" placeholder="CPF"/>
+				<small>Informe qual o cpf do cliente.</small>
+				<div class="invalid-feedback" th:errors="*{cpf}">
+					Erros no cpf do cliente
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="telefone">Telefone</label>
+				<input th:field="*{telefone}" th:errorclass="is-invalid" class="form-control" placeholder="Telefone"/>
+				<small>Informe qual o telefone do cliente.</small>
+				<div class="invalid-feedback" th:errors="*{telefone}">
+					Erros no telefone do cliente
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="numCartao">Número do cartão</label>
+				<input th:field="*{numCartao}" th:errorclass="is-invalid" class="form-control" placeholder="Numero do cartão" readonly/>
+				<small>Informe qual o número do cartão.</small>
+				<div class="invalid-feedback" th:errors="*{numCartao}">
+					Erros no número do cartão
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="endereco">Endereço</label>
+				<input th:field="*{endereco}" th:errorclass="is-invalid" class="form-control" placeholder="Endereço"/>
+				<small>Informe qual o endereço do cliente.</small>
+				<div class="invalid-feedback" th:errors="*{endereco}">
+					Erros no endereço do cliente
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="senha">Senha</label>
+				<input th:field="*{senha}" th:errorclass="is-invalid" type="password" class="form-control" placeholder="Senha"/>
+				<small>Informe qual a senha.</small>
+				<div class="invalid-feedback" th:errors="*{senha}">
+					Erros na senha
+				</div>
+			</div>
+			<button class="btn btn-primary" type="submit">Cadastrar</button>
+		</form>
+	</div>
+
+</div>
+</body>
+</html>
