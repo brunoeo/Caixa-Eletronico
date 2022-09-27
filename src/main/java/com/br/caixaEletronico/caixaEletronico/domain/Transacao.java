@@ -1,11 +1,10 @@
 package com.br.caixaEletronico.caixaEletronico.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.data.jpa.repository.Temporal;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -13,9 +12,8 @@ public class Transacao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long valor;
+    private BigDecimal valor;
     @Basic
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate date;
     @Enumerated(EnumType.STRING)
     private TipoTransacao tipoTransacao;
@@ -24,11 +22,11 @@ public class Transacao {
     private User user;
 
 
-    public Long getValor() {
+    public BigDecimal getValor() {
         return valor;
     }
 
-    public void setValor(Long valor) {
+    public void setValor(BigDecimal valor) {
         this.valor = valor;
     }
 

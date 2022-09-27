@@ -39,7 +39,7 @@
                 <div class="col" sec:authorize="hasAuthority('CLIENTE')">
                     <nav class="nav">
                         <a class="nav-link" th:href="@{/cliente/home}">Home</a>
-                        <a class="nav-link" th:href="@{/cliente/formulario}">Alterar Dados</a>
+                        <a class="nav-link" th:href="@{/cliente/formulario/alteracao}">Alterar Dados</a>
                         <a class="nav-link" th:href="@{/cliente/extrato}">Extrato</a>
                     </nav>
                 </div>
@@ -52,6 +52,17 @@
 
                 </div>
             </div>
+
+    <div th:fragment="topo-cliente" class="">
+        <div class="jumbotron mb-3 mt-2 mx-auto" th:object="${user}" style="width: 300px;">
+            <div class="container">
+                <p th:text="${user.userName}" style="font-size: 1.8rem;">Nome do Usuario</p>
+                <p th:text="${'R$ ' + #numbers.formatDecimal(user.saldo,1,'POINT',2,'COMMA')}" class="lead" style="font-size: 1.2rem;">Valor</p>
+            </div>
+        </div>
+    </div>
+
+
 
 </body>
 </html>

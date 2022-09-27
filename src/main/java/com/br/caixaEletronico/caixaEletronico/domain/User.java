@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -29,7 +30,7 @@ public class User implements UserDetails {
     private String cpf;
     private Boolean enable;
 
-    private Double saldo;
+    private BigDecimal saldo;
 
 
     public String getUserName() {
@@ -161,11 +162,11 @@ public class User implements UserDetails {
         this.enable = enable;
     }
 
-    public Double getSaldo() {
+    public BigDecimal getSaldo() {
         return saldo;
     }
 
-    public void setSaldo(Double saldo) {
+    public void setSaldo(BigDecimal saldo) {
         this.saldo = saldo;
     }
 }

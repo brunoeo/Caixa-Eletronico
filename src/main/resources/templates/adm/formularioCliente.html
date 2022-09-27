@@ -5,9 +5,10 @@
 
     <div th:replace="~{base :: logo}"></div>
 
-    <div class="container">
+    <div class="container mb-3">
 
         <div class="card mt-3">
+            <div class="card-header">Cadastro Cliente</div>
             <form th:object="${requisicaoNovoCliente}" class="card-body" th:action="@{/adm/novoCliente}" method="POST">
                 <div class="form-group">
                     <label for="nome">Nome do Cliente</label>

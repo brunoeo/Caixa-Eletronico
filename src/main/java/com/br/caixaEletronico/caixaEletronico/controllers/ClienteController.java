@@ -1,8 +1,12 @@
 package com.br.caixaEletronico.caixaEletronico.controllers;
 
 import com.br.caixaEletronico.caixaEletronico.domain.Perfil;
+import com.br.caixaEletronico.caixaEletronico.domain.Transacao;
 import com.br.caixaEletronico.caixaEletronico.domain.User;
+import com.br.caixaEletronico.caixaEletronico.dto.RequisicaoDeposito;
 import com.br.caixaEletronico.caixaEletronico.dto.RequisicaoNovoCliente;
+import com.br.caixaEletronico.caixaEletronico.dto.RequisicaoSaque;
+import com.br.caixaEletronico.caixaEletronico.repositories.TransacaoRepository;
 import com.br.caixaEletronico.caixaEletronico.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,6 +29,8 @@ public class ClienteController {
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    TransacaoRepository transacaoRepository;
 
 
     @RequestMapping("home")
@@ -41,8 +47,8 @@ public class ClienteController {
         return "cliente/login";
     }
 
-    @RequestMapping("formulario")
-    public String formulario(Model model, Authentication auth, RequisicaoNovoCliente requisicaoNovoCliente){
+    @RequestMapping("formulario/alteracao")
+    public String formularioAlterar(Model model, Authentication auth, RequisicaoNovoCliente requisicaoNovoCliente){
 
         auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
@@ -66,5 +72,65 @@ public class ClienteController {
         return "redirect:/cliente/home";
     }
 
+    @RequestMapping("formulario/deposito")
+    public String formularioDepositar(Model model, RequisicaoDeposito requisicaoDeposito){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) auth.getPrincipal();
+        requisicaoDeposito.setNumCartao(user.getNumCartao());
+        model.addAttribute("user", user);
+
+        return "cliente/formularioDeposito";
+    }
+
+    @PostMapping("deposita")
+    public String deposito(@Valid RequisicaoDeposito requisicaoDeposito, BindingResult result, Model model){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) auth.getPrincipal();
+        model.addAttribute("user", user);
+        if(result.hasErrors()){
+            return "cliente/formularioDeposito";
+        }
+
+        Transacao transacao = requisicaoDeposito.realizaTransacao(user);
+        transacaoRepository.save(transacao);
+        userRepository.save(user);
+
+        return "redirect:/cliente/home";
+    }
+
+    @RequestMapping("formulario/sacar")
+    public String formularioSaque(Model model, RequisicaoSaque requisicaoSaque){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) auth.getPrincipal();
+        requisicaoSaque.setNumCartao(user.getNumCartao());
+        model.addAttribute("user", user);
+
+        return "cliente/formularioSaque";
+    }
+
+    @PostMapping("saca")
+    public String saca(@Valid RequisicaoSaque requisicaoSaque, BindingResult result, Model model){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) auth.getPrincipal();
+        model.addAttribute("user", user);
+        if(result.hasErrors()){
+            return "cliente/formularioSaque";
+        }else{
+            requisicaoSaque.validaSaldo(result, user);
+            if(result.hasErrors()){
+                return "cliente/formularioSaque";
+            }
+        }
+
+        Transacao transacao = requisicaoSaque.realizaSaque(user);
+        transacaoRepository.save(transacao);
+        userRepository.save(user);
+
+        return "redirect:/cliente/home";
+    }
 
 }

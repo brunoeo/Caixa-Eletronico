@@ -6,6 +6,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.math.BigDecimal;
 
 public class RequisicaoNovoCliente {
 
@@ -81,7 +82,7 @@ public class RequisicaoNovoCliente {
         user.setCpf(this.cpf);
         user.setTelefone(this.telefone);
         user.setEndereco(this.endereco);
-        user.setSaldo(0.00);
+        user.setSaldo(new BigDecimal(0));
         return user;
     }
 

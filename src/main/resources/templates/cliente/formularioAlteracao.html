@@ -8,6 +8,7 @@
 <div class="container">
 
 	<div class="card mt-3">
+		<div class="card-header">Alteração de cadastro</div>
 		<form th:object="${requisicaoNovoCliente}" class="card-body" th:action="@{/cliente/atualizaCliente}" method="POST">
 			<div class="form-group">
 				<label for="nome">Nome do Cliente</label>
