@@ -1,11 +1,8 @@
 package com.br.caixaEletronico.caixaEletronico.controllers;
 
-import com.br.caixaEletronico.caixaEletronico.domain.Perfil;
 import com.br.caixaEletronico.caixaEletronico.domain.Transacao;
 import com.br.caixaEletronico.caixaEletronico.domain.User;
-import com.br.caixaEletronico.caixaEletronico.dto.RequisicaoDeposito;
-import com.br.caixaEletronico.caixaEletronico.dto.RequisicaoNovoCliente;
-import com.br.caixaEletronico.caixaEletronico.dto.RequisicaoSaque;
+import com.br.caixaEletronico.caixaEletronico.dto.*;
 import com.br.caixaEletronico.caixaEletronico.repositories.TransacaoRepository;
 import com.br.caixaEletronico.caixaEletronico.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +12,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -71,6 +69,7 @@ public class ClienteController {
 
         return "redirect:/cliente/home";
     }
+
 
     @RequestMapping("formulario/deposito")
     public String formularioDepositar(Model model, RequisicaoDeposito requisicaoDeposito){
@@ -129,6 +128,87 @@ public class ClienteController {
         Transacao transacao = requisicaoSaque.realizaSaque(user);
         transacaoRepository.save(transacao);
         userRepository.save(user);
+
+        return "redirect:/cliente/home";
+    }
+
+    @RequestMapping("formulario/pagamento")
+    public String formularioPagamento(Model model, RequisicaoPagamento requisicaoPagamento){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) auth.getPrincipal();
+        model.addAttribute("user", user);
+
+        return "cliente/formularioPagamento";
+    }
+
+    @PostMapping("pagar")
+    public String pagar(@Valid RequisicaoPagamento requisicaoPagamento, BindingResult result, Model model){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) auth.getPrincipal();
+        model.addAttribute("user", user);
+        if(result.hasErrors()){
+            return "cliente/formularioPagamento";
+        }else{
+            requisicaoPagamento.validaSaldo(result, user);
+            if(result.hasErrors()){
+                return "cliente/formularioSaque";
+            }
+        }
+
+        Transacao transacao = requisicaoPagamento.realizaPagamento(user);
+        transacaoRepository.save(transacao);
+        userRepository.save(user);
+
+        return "redirect:/cliente/home";
+    }
+
+    @RequestMapping("formulario/transferencia")
+    public String formularioTransferencia(Model model, RequisicaoTransferencia requisicaoTransferencia){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) auth.getPrincipal();
+        model.addAttribute("user", user);
+
+        return "cliente/formularioTransferencia";
+    }
+
+    @PostMapping("transferir")
+    public String transferir(@Valid RequisicaoTransferencia requisicaoTransferencia, BindingResult result, Model model){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) auth.getPrincipal();
+        model.addAttribute("user", user);
+        List<User> users = new ArrayList<>();
+        users.add(user);
+        if(result.hasErrors()){
+            return "cliente/formularioPagamento";
+        }else{
+            requisicaoTransferencia.validaSaldo(result, user);
+            if(result.hasErrors()){
+                return "cliente/formularioSaque";
+            }
+            else {
+                if (user.getNumCartao().equalsIgnoreCase(requisicaoTransferencia.getNumCartao())){
+                    result.rejectValue("numCartao", "requisicaoSaque", "Digite outro número de cartão");
+                    return "cliente/formularioSaque";
+                }
+                Optional<User> user1 = userRepository.findByNumCartao(requisicaoTransferencia.getNumCartao());
+                if (user1.isPresent()){
+                    users.add(user1.get());
+                }else{
+                    result.rejectValue("numCartao", "requisicaoSaque", "Conta não localizada");
+                    return "cliente/formularioSaque";
+                }
+            }
+        }
+
+
+
+        List<Transacao> transacao = requisicaoTransferencia.realizaPagamento(users);
+        transacaoRepository.saveAll(transacao);
+        userRepository.saveAll(users);
 
         return "redirect:/cliente/home";
     }

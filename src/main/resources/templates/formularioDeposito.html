@@ -4,17 +4,15 @@
 <body>
 
 <div th:replace="~{base :: logo}"></div>
-<div th:replace="~{base :: topo-cliente}"></div>
-
 
 <div class="container mb-5">
 
 	<div class="card mt-3">
 		<div class="card-header">Deposito</div>
-		<form th:object="${requisicaoDeposito}" class="card-body" th:action="@{/cliente/deposita}" method="POST">
+		<form th:object="${requisicaoDeposito}" class="card-body" th:action="@{/deposita}" method="POST">
 			<div class="form-group">
 				<label>Número do cartão</label>
-				<input th:field="*{numCartao}" th:errorclass="is-invalid" class="form-control" placeholder="Número do cartão" readonly/>
+				<input th:field="*{numCartao}" th:errorclass="is-invalid" class="form-control" placeholder="Número do cartão"/>
 				<div class="invalid-feedback" th:errors="*{numCartao}">
 					Erros no número do cartão
 				</div>

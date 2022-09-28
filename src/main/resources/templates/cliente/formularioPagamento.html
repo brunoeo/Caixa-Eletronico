@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:replace="~{base :: head}"></head>
+<body>
+
+<div th:replace="~{base :: logo}"></div>
+<div th:replace="~{base :: topo-cliente}"></div>
+
+
+<div class="container mb-5">
+
+	<div class="card mt-3">
+		<div class="card-header">Saque</div>
+		<form th:object="${requisicaoPagamento}" class="card-body" th:action="@{/cliente/pagar}" method="POST">
+			<div class="form-group">
+				<label>Valor do pagamento</label>
+				<input th:field="*{valor}" th:errorclass="is-invalid" class="form-control" placeholder="Valor Pagamento"/>
+				<div class="invalid-feedback" th:errors="*{valor}">
+					Erros no pagamento
+				</div>
+			</div>
+			<button class="btn btn-primary" type="submit">Pagar</button>
+		</form>
+	</div>
+
+</div>
+</body>
+</html>
