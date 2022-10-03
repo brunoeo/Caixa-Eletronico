@@ -213,4 +213,13 @@ public class ClienteController {
         return "redirect:/cliente/home";
     }
 
+    @RequestMapping("extrato")
+    public String extrato(Model model){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) auth.getPrincipal();
+        user.setTransacoes(transacaoRepository.findByUserId(user.getId()));
+        model.addAttribute("user", user);
+        return "cliente/extrato";
+    }
+
 }

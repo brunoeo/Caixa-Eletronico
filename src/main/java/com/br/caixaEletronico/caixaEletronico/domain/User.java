@@ -26,10 +26,11 @@ public class User implements UserDetails {
     private String numCartao;
     private String codigo;
     private String telefone;
-    private String endereco;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "endereco_id")
+    private Endereco endereco;
     private String cpf;
     private Boolean enable;
-
     private BigDecimal saldo;
 
 
@@ -134,11 +135,11 @@ public class User implements UserDetails {
         this.telefone = telefone;
     }
 
-    public String getEndereco() {
+    public Endereco getEndereco() {
         return endereco;
     }
 
-    public void setEndereco(String endereco) {
+    public void setEndereco(Endereco endereco) {
         this.endereco = endereco;
     }
 

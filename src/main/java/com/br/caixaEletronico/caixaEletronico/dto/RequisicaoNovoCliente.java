@@ -1,5 +1,6 @@
 package com.br.caixaEletronico.caixaEletronico.dto;
 
+import com.br.caixaEletronico.caixaEletronico.domain.Endereco;
 import com.br.caixaEletronico.caixaEletronico.domain.User;
 import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,7 +17,17 @@ public class RequisicaoNovoCliente {
     @NotBlank
     private String telefone;
     @NotBlank
-    private String endereco;
+    @NotBlank
+    private String cep;
+    @NotBlank
+    private String num;
+    @NotBlank
+    private String rua;
+    @NotBlank
+    private String bairro;
+    @NotBlank
+    private String cidade;
+    private String complemento;
     @NotBlank
     @CPF(message = "CPF inválido")
     private String cpf;
@@ -50,14 +61,6 @@ public class RequisicaoNovoCliente {
         this.telefone = telefone;
     }
 
-    public String getEndereco() {
-        return endereco;
-    }
-
-    public void setEndereco(String endereco) {
-        this.endereco = endereco;
-    }
-
     public String getNumCartao() {
         return numCartao;
     }
@@ -74,6 +77,62 @@ public class RequisicaoNovoCliente {
         this.senha = senha;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getCep() {
+        return cep;
+    }
+
+    public void setCep(String cep) {
+        this.cep = cep;
+    }
+
+    public String getNum() {
+        return num;
+    }
+
+    public void setNum(String num) {
+        this.num = num;
+    }
+
+    public String getRua() {
+        return rua;
+    }
+
+    public void setRua(String rua) {
+        this.rua = rua;
+    }
+
+    public String getBairro() {
+        return bairro;
+    }
+
+    public void setBairro(String bairro) {
+        this.bairro = bairro;
+    }
+
+    public String getCidade() {
+        return cidade;
+    }
+
+    public void setCidade(String cidade) {
+        this.cidade = cidade;
+    }
+
+    public String getComplemento() {
+        return complemento;
+    }
+
+    public void setComplemento(String complemento) {
+        this.complemento = complemento;
+    }
+
     public User toUser() {
         User user = new User();
         user.setUserName(this.nome);
@@ -81,9 +140,20 @@ public class RequisicaoNovoCliente {
         user.setNumCartao(this.numCartao);
         user.setCpf(this.cpf);
         user.setTelefone(this.telefone);
-        user.setEndereco(this.endereco);
+        user.setEnable(true);
         user.setSaldo(new BigDecimal(0));
         return user;
+    }
+
+    public Endereco toEndereco() {
+        Endereco endereco = new Endereco();
+        endereco.setRua(this.rua);
+        endereco.setBairro(this.bairro);
+        endereco.setCep(this.cep);
+        endereco.setCidade(this.cidade);
+        endereco.setComplemento(this.complemento);
+        endereco.setNum(this.num);
+        return endereco;
     }
 
     public void toRequisicao(User user) {
@@ -92,7 +162,12 @@ public class RequisicaoNovoCliente {
         this.numCartao = user.getNumCartao();
         this.cpf = user.getCpf();
         this.telefone = user.getTelefone();
-        this.endereco = user.getEndereco();
+        this.setRua(user.getEndereco().getRua());
+        this.setBairro(user.getEndereco().getBairro());
+        this.setCep(user.getEndereco().getCep());
+        this.setCidade(user.getEndereco().getCidade());
+        this.setComplemento(user.getEndereco().getComplemento());
+        this.setNum(user.getEndereco().getNum());
         this.id = user.getId();
     }
 
@@ -102,6 +177,15 @@ public class RequisicaoNovoCliente {
         user.setNumCartao(this.numCartao);
         user.setCpf(this.cpf);
         user.setTelefone(this.telefone);
-        user.setEndereco(this.endereco);
+        atualizaEndereco(user.getEndereco());
+    }
+
+    private void atualizaEndereco(Endereco endereco) {
+        endereco.setRua(this.rua);
+        endereco.setBairro(this.bairro);
+        endereco.setCep(this.cep);
+        endereco.setCidade(this.cidade);
+        endereco.setComplemento(this.complemento);
+        endereco.setNum(this.num);
     }
 }

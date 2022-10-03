@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="~{base :: head}"></head>
+<body>
+        <div th:replace="~{base :: logo}"></div>
+        <div class="container mt-3 col-sm-6">
+                <div class="card mb-3">
+                        <div class="card-header usuario-container">
+                                <div class="p-3 d-flex justify-content-between">
+                                        <div class="usuario ml-2">Extrato</div>
+                                </div>
+                        </div>
+
+                        <div class="card mb-3 mt-3" th:each="transacao : ${user.transacoes}">
+                                <div class="card-body">
+                                        <div class="row">
+                                                <div class="col-12 col-sm-12 mb-3">
+                                                        <div class="col-md-5">Valor: <span th:text="${'R$ ' + #numbers.formatDecimal(transacao.valor,1,'POINT',2,'COMMA')}">200,99</span></div>
+                                                        <div class="col-md-7">Tipo da transação: <span th:text="${transacao.tipoTransacao}">Tipo</span></div>
+                                                        <div class="col-md-7">Data da transação: <span th:text="${#temporals.format(transacao.date, 'dd/MMM/yyyy')}">10/02/2022</span></div>
+                                                </div>
+                                        </div>
+                                </div>
+
+                        </div>
+                        <div class="col-md-5">Saldo: <span th:text="${'R$ ' + #numbers.formatDecimal(user.saldo,1,'POINT',2,'COMMA')}">200,99</span></div>
+                </div>
+
+        </div>
+
+</body>
+</html>

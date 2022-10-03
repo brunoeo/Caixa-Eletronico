@@ -1,9 +1,11 @@
 package com.br.caixaEletronico.caixaEletronico.controllers;
 
+import com.br.caixaEletronico.caixaEletronico.domain.Endereco;
 import com.br.caixaEletronico.caixaEletronico.domain.Perfil;
 import com.br.caixaEletronico.caixaEletronico.domain.User;
 import com.br.caixaEletronico.caixaEletronico.dto.RequisicaoNovoADM;
 import com.br.caixaEletronico.caixaEletronico.dto.RequisicaoNovoCliente;
+import com.br.caixaEletronico.caixaEletronico.repositories.EnderecoRepository;
 import com.br.caixaEletronico.caixaEletronico.repositories.PerfilRepository;
 import com.br.caixaEletronico.caixaEletronico.repositories.UserRepository;
 import com.br.caixaEletronico.caixaEletronico.services.ADM.ADMService;
@@ -34,9 +36,13 @@ public class ADMController {
 
     @Autowired
     ADMService admService;
+    @Autowired
+    EnderecoRepository enderecoRepository;
 
     @RequestMapping("home")
     public String home(Model model, Principal principal){
+
+        //userRepository.deleteById(9L);
 
         List<User> users = userRepository.findAllByOrderByUserNameAsc();
         for (User user : users){
@@ -83,8 +89,11 @@ public class ADMController {
         }
 
         User user = requisicao.toUser();
+        Endereco endereco = requisicao.toEndereco();
         Perfil perfil = perfilRepository.findByNome("CLIENTE");
         user.getPerfis().add(perfil);
+        enderecoRepository.save(endereco);
+        user.setEndereco(endereco);
         userRepository.save(user);
 
         return "redirect:/adm/home";
@@ -98,8 +107,11 @@ public class ADMController {
 
 
         User user = requisicao.toUser();
+        Endereco endereco = requisicao.toEndereco();
         Perfil perfil = perfilRepository.findByNome("ADM");
         user.getPerfis().add(perfil);
+        enderecoRepository.save(endereco);
+        user.setEndereco(endereco);
         userRepository.save(user);
 
         return "redirect:/adm/home";
