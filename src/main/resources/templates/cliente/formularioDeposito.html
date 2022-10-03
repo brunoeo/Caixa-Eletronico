@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:replace="~{base :: head}"></head>
+<body>
+
+<div th:replace="~{base :: logo}"></div>
+<div th:replace="~{base :: topo-cliente}"></div>
+
+
+<div class="container mb-5">
+
+	<div class="card mt-3">
+		<div class="card-header">Deposito</div>
+		<form th:object="${requisicaoDeposito}" class="card-body" th:action="@{/cliente/deposita}" method="POST">
+			<div class="form-group">
+				<label>Número do cartão</label>
+				<input th:field="*{numCartao}" th:errorclass="is-invalid" class="form-control" placeholder="Número do cartão" readonly/>
+				<div class="invalid-feedback" th:errors="*{numCartao}">
+					Erros no número do cartão
+				</div>
+			</div>
+			<div class="form-group">
+				<label>Valor do Depósito</label>
+				<input th:field="*{deposito}" th:errorclass="is-invalid" class="form-control" placeholder="Depósito"/>
+				<small>Informe o valor a ser depositado.</small>
+				<div class="invalid-feedback" th:errors="*{deposito}">
+					Erros no depósito
+				</div>
+			</div>
+			<button class="btn btn-primary" type="submit">Depositar</button>
+		</form>
+	</div>
+
+</div>
+</body>
+</html>

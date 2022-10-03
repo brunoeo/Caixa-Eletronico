@@ -1,57 +1,51 @@
-package com.br.caixaEletronico.caixaEletronico;
+package com.br.caixaEletronico.caixaEletronico.Security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+@Order(1)
+public class WebSecurityConfigCliente extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private DataSource dataSource;
+    AutenticacaoClienteService autenticacaoClienteService;
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests()
-                .antMatchers("/adm/**").hasRole("ADM")
-                .antMatchers("/cliente/**").hasRole("CLIENTE")
-                .anyRequest().authenticated()
-                .and()
-                .formLogin(form -> form
-                        .loginPage("/adm/login")
-                        .defaultSuccessUrl("/adm/home", true)
-                        .permitAll())
-                .formLogin(form -> form
-                        .loginPage("/cliente/login")
-                        .defaultSuccessUrl("/cliente/home", true)
-                        .permitAll())
-                //.logout(logout -> logout.logoutUrl("/logout"))
-        ;
+    public WebSecurityConfigCliente(){
+        super();
     }
 
+    //Configuracoes de autorizacao
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.antMatcher("/cliente/**")
+                .authorizeRequests()
+                .anyRequest().authenticated()
+                .and().
+                formLogin(form -> form
+                        .loginPage("/cliente/login")
+                        .loginProcessingUrl("/cliente/login")
+                        .defaultSuccessUrl("/cliente/home", true)
+                        .permitAll())
+                .logout(logout -> {logout.logoutUrl("/cliente/logout")
+                        .logoutSuccessUrl("/cliente/login");
+                })
+                .csrf().disable()
+        ;
+
+    }
+
+    //Configuracoes de autenticacao
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-
-        /*UserDetails user =
-                User.builder()
-                        .username("joao")
-                        .password(encoder.encode("joao"))
-                        .roles("ADM")
-                        .build();*/
-
-        auth.jdbcAuthentication()
-                .dataSource(dataSource)
-                .passwordEncoder(encoder);
+        auth.userDetailsService(autenticacaoClienteService).passwordEncoder(new BCryptPasswordEncoder());
     }
 
 }

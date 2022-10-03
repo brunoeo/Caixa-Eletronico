@@ -1,52 +1,114 @@
 package com.br.caixaEletronico.caixaEletronico.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
 
     @Id
-    private String nomeUsuario;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String userName;
     private String senha;
-    private String cpf;
-    private String telefone;
-    private String endereco;
-    private String numeroDoCartao;
-    private Double saldo;
-
-    private  Boolean enable;
-
-
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Perfil> perfis = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Transacao> trasacoes = new ArrayList<>();
+    private List<Transacao> transacoes = new ArrayList<>();
+    private String numCartao;
+    private String codigo;
+    private String telefone;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "endereco_id")
+    private Endereco endereco;
+    private String cpf;
+    private Boolean enable;
+    private BigDecimal saldo;
+
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public List<Transacao> getTransacoes() {
+        return transacoes;
+    }
+
+    public void setTransacoes(List<Transacao> transacoes) {
+        this.transacoes = transacoes;
+    }
+
+    public String getNumCartao() {
+        return numCartao;
+    }
+
+    public void setNumCartao(String numCartao) {
+        this.numCartao = numCartao;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
 
     public User(){}
 
-    public User(String nomeUsuario, String senha, String cpf, String telefone, String endereco,
-                String numeroDoCartao, Double saldo, Boolean enable, List<Transacao> trasacoes) {
-        this.nomeUsuario = nomeUsuario;
-        this.senha = senha;
-        this.cpf = cpf;
-        this.telefone = telefone;
-        this.endereco = endereco;
-        this.numeroDoCartao = numeroDoCartao;
-        this.saldo = saldo;
-        this.enable = enable;
-        this.trasacoes = trasacoes;
+
+    public Long getId() {
+        return id;
     }
 
-    public String getNomeUsuario() {
-        return nomeUsuario;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setNomeUsuario(String nomeUsuario) {
-        this.nomeUsuario = nomeUsuario;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.perfis;
+    }
+
+    @Override
+    public String getPassword() {
+        return senha;
+    }
+
+    public String getUsername() {
+        return this.userName;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enable;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getSenha() {
@@ -57,12 +119,12 @@ public class User {
         this.senha = senha;
     }
 
-    public String getCpf() {
-        return cpf;
+    public List<Perfil> getPerfis() {
+        return perfis;
     }
 
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
+    public void setPerfis(List<Perfil> perfis) {
+        this.perfis = perfis;
     }
 
     public String getTelefone() {
@@ -73,43 +135,39 @@ public class User {
         this.telefone = telefone;
     }
 
-    public String getEndereco() {
+    public Endereco getEndereco() {
         return endereco;
     }
 
-    public void setEndereco(String endereco) {
+    public void setEndereco(Endereco endereco) {
         this.endereco = endereco;
     }
 
-    public String getNumeroDoCartao() {
-        return numeroDoCartao;
+    public String getCpf() {
+        return cpf;
     }
 
-    public void setNumeroDoCartao(String numeroDoCartao) {
-        this.numeroDoCartao = numeroDoCartao;
-    }
-
-    public Double getSaldo() {
-        return saldo;
-    }
-
-    public void setSaldo(Double saldo) {
-        this.saldo = saldo;
-    }
-
-    public List<Transacao> getTrasacoes() {
-        return trasacoes;
-    }
-
-    public void setTrasacoes(List<Transacao> trasacoes) {
-        this.trasacoes = trasacoes;
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 
     public Boolean getEnable() {
         return enable;
     }
 
+    public void setEnable() {
+        this.enable = !this.enable;
+    }
+
     public void setEnable(Boolean enable) {
         this.enable = enable;
+    }
+
+    public BigDecimal getSaldo() {
+        return saldo;
+    }
+
+    public void setSaldo(BigDecimal saldo) {
+        this.saldo = saldo;
     }
 }
