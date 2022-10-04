@@ -1,0 +1,17 @@
+$bgcolor: #47bcff;
+
+   .logo-container {
+      background-color: $bgcolor;
+      color: #FFF;
+          .logo {
+            font-family: "Handlee", cursive;
+            font-size: 2.5rem;
+          }
+    }
+  .usuario-container {
+      background-color: $bgcolor;
+      .usuario {
+            font-family: serif;
+            font-size: 2.5rem;
+          }
+    }
