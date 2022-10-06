@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("adm")
@@ -41,16 +40,10 @@ public class ADMController {
 
     @RequestMapping("home")
     public String home(Model model, Principal principal){
-
         //userRepository.deleteById(9L);
 
-        List<User> users = userRepository.findAllByOrderByUserNameAsc();
-        for (User user : users){
-            if (user.getUserName().equalsIgnoreCase(principal.getName())){
-                users.remove(user);
-                break;
-            }
-        }
+        List<User> users = admService.listarUsuarios(principal.getName(), userRepository);
+
         model.addAttribute("users", users);
         return "adm/home";
     }
@@ -73,11 +66,7 @@ public class ADMController {
     @PostMapping("ativaDesativa/{id}")
     public String ativaDesativa(@PathVariable Long id){
 
-
-        Optional<User> user = userRepository.findById(id);
-        User userUpdate = user.get();
-        userUpdate.setEnable();
-        userRepository.save(userUpdate);
+        admService.updateEnable(userRepository, id);
 
         return "redirect:/adm/home";
     }
@@ -88,13 +77,8 @@ public class ADMController {
             return "adm/formularioCliente";
         }
 
-        User user = requisicao.toUser();
-        Endereco endereco = requisicao.toEndereco();
-        Perfil perfil = perfilRepository.findByNome("CLIENTE");
-        user.getPerfis().add(perfil);
-        enderecoRepository.save(endereco);
-        user.setEndereco(endereco);
-        userRepository.save(user);
+        admService.saveUsuario(requisicao, perfilRepository, enderecoRepository, userRepository);
+
 
         return "redirect:/adm/home";
     }
@@ -105,14 +89,8 @@ public class ADMController {
             return "adm/formularioADM";
         }
 
+        admService.saveUsuario(requisicao, perfilRepository, enderecoRepository, userRepository);
 
-        User user = requisicao.toUser();
-        Endereco endereco = requisicao.toEndereco();
-        Perfil perfil = perfilRepository.findByNome("ADM");
-        user.getPerfis().add(perfil);
-        enderecoRepository.save(endereco);
-        user.setEndereco(endereco);
-        userRepository.save(user);
 
         return "redirect:/adm/home";
     }

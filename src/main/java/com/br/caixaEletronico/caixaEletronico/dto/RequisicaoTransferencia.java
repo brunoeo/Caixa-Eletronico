@@ -34,37 +34,4 @@ public class RequisicaoTransferencia {
         this.valor = valor;
     }
 
-    public List<Transacao> realizaPagamento(List<User> users){
-        User userEnvia = users.get(0);
-        User userRecebe = users.get(1);
-        List<Transacao> transacao = new ArrayList<>();
-
-        Transacao transacaoEnvia = new Transacao();
-        transacaoEnvia.setTipoTransacao(TipoTransacao.TRANSFERENCIA);
-        BigDecimal valorSaque = new BigDecimal(this.valor).multiply(BigDecimal.valueOf(-1));
-        transacaoEnvia.setValor(valorSaque);
-        transacaoEnvia.setDate(LocalDate.now());
-        transacaoEnvia.setUser(userEnvia);
-        userEnvia.setSaldo(valorSaque.add(userEnvia.getSaldo()));
-
-        Transacao transacaoRecebe = new Transacao();
-        transacaoRecebe.setTipoTransacao(TipoTransacao.TRANSFERENCIA);
-        transacaoRecebe.setValor(new BigDecimal(this.valor));
-        transacaoRecebe.setDate(LocalDate.now());
-        transacaoRecebe.setUser(userRecebe);
-        userRecebe.setSaldo(new BigDecimal(this.valor).add(userRecebe.getSaldo()));
-
-        transacao.add(transacaoEnvia);
-        transacao.add(transacaoRecebe);
-
-
-        return transacao;
-    }
-
-    public void validaSaldo(BindingResult result, User user) {
-
-        if (new BigDecimal(valor).compareTo(user.getSaldo()) > 0){
-            result.rejectValue("saque", "requisicaoSaque", "Saldo Insuficiente");
-        }
-    }
 }

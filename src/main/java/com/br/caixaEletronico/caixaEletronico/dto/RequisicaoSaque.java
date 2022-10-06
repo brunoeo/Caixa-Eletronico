@@ -36,21 +36,4 @@ public class RequisicaoSaque {
         this.saque = saque;
     }
 
-    public Transacao realizaSaque(User user){
-        Transacao transacao = new Transacao();
-        transacao.setTipoTransacao(TipoTransacao.SAQUE);
-        BigDecimal valorSaque = new BigDecimal(this.saque).multiply(BigDecimal.valueOf(-1));
-        transacao.setValor(valorSaque);
-        transacao.setDate(LocalDate.now());
-        transacao.setUser(user);
-        user.setSaldo(valorSaque.add(user.getSaldo()));
-        return transacao;
-    }
-
-    public void validaSaldo(BindingResult result, User user) {
-
-        if (new BigDecimal(saque).compareTo(user.getSaldo()) > 0){
-            result.rejectValue("saque", "requisicaoSaque", "Saldo Insuficiente");
-        }
-    }
 }

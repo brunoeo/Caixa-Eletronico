@@ -5,6 +5,7 @@ import com.br.caixaEletronico.caixaEletronico.domain.User;
 import com.br.caixaEletronico.caixaEletronico.dto.*;
 import com.br.caixaEletronico.caixaEletronico.repositories.TransacaoRepository;
 import com.br.caixaEletronico.caixaEletronico.repositories.UserRepository;
+import com.br.caixaEletronico.caixaEletronico.services.Cliente.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -29,6 +30,8 @@ public class ClienteController {
     UserRepository userRepository;
     @Autowired
     TransacaoRepository transacaoRepository;
+    @Autowired
+    ClienteService clienteService;
 
 
     @RequestMapping("home")
@@ -57,15 +60,12 @@ public class ClienteController {
     }
 
     @PostMapping("atualizaCliente")
-    public String atualiza(@Valid RequisicaoNovoCliente requisicao, BindingResult result){
+    public String atualiza(@Valid RequisicaoNovoCliente requisicao, BindingResult result, Authentication auth){
         if(result.hasErrors()){
-            return "adm/formularioCliente";
+            return "cliente/formularioAlteracao";
         }
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) auth.getPrincipal();
-        requisicao.atualizaUser(user);
 
-        userRepository.save(user);
+        clienteService.atualiza(requisicao, userRepository, auth);
 
         return "redirect:/cliente/home";
     }
@@ -83,19 +83,15 @@ public class ClienteController {
     }
 
     @PostMapping("deposita")
-    public String deposito(@Valid RequisicaoDeposito requisicaoDeposito, BindingResult result, Model model){
+    public String deposito(@Valid RequisicaoDeposito requisicaoDeposito, BindingResult result, Model model, Authentication auth){
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
         model.addAttribute("user", user);
         if(result.hasErrors()){
             return "cliente/formularioDeposito";
         }
-
-        Transacao transacao = requisicaoDeposito.realizaTransacao(user);
-        transacaoRepository.save(transacao);
-        userRepository.save(user);
-
+        clienteService.deposita(requisicaoDeposito, auth, user, transacaoRepository, userRepository);
         return "redirect:/cliente/home";
     }
 
@@ -118,16 +114,15 @@ public class ClienteController {
         model.addAttribute("user", user);
         if(result.hasErrors()){
             return "cliente/formularioSaque";
-        }else{
-            requisicaoSaque.validaSaldo(result, user);
-            if(result.hasErrors()){
-                return "cliente/formularioSaque";
-            }
         }
 
-        Transacao transacao = requisicaoSaque.realizaSaque(user);
-        transacaoRepository.save(transacao);
-        userRepository.save(user);
+        clienteService.validaSaldo(result, user, requisicaoSaque.getSaque());
+
+        if(result.hasErrors()){
+            return "cliente/formularioSaque";
+        }
+
+        clienteService.realizaTransacao(user, requisicaoSaque, transacaoRepository, userRepository);
 
         return "redirect:/cliente/home";
     }
@@ -150,16 +145,15 @@ public class ClienteController {
         model.addAttribute("user", user);
         if(result.hasErrors()){
             return "cliente/formularioPagamento";
-        }else{
-            requisicaoPagamento.validaSaldo(result, user);
-            if(result.hasErrors()){
-                return "cliente/formularioSaque";
-            }
+        }
+        clienteService.validaSaldo(result, user, requisicaoPagamento.getValor());
+
+        if(result.hasErrors()){
+            return "cliente/formularioPagamento";
         }
 
-        Transacao transacao = requisicaoPagamento.realizaPagamento(user);
-        transacaoRepository.save(transacao);
-        userRepository.save(user);
+        clienteService.realizaTransacao(user, requisicaoPagamento, transacaoRepository, userRepository);
+
 
         return "redirect:/cliente/home";
     }
@@ -175,40 +169,27 @@ public class ClienteController {
     }
 
     @PostMapping("transferir")
-    public String transferir(@Valid RequisicaoTransferencia requisicaoTransferencia, BindingResult result, Model model){
+    public String transferir(@Valid RequisicaoTransferencia requisicaoTransferencia,
+                             BindingResult result, Model model, Authentication auth){
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
         model.addAttribute("user", user);
-        List<User> users = new ArrayList<>();
-        users.add(user);
+
         if(result.hasErrors()){
-            return "cliente/formularioPagamento";
-        }else{
-            requisicaoTransferencia.validaSaldo(result, user);
-            if(result.hasErrors()){
-                return "cliente/formularioSaque";
-            }
-            else {
-                if (user.getNumCartao().equalsIgnoreCase(requisicaoTransferencia.getNumCartao())){
-                    result.rejectValue("numCartao", "requisicaoSaque", "Digite outro número de cartão");
-                    return "cliente/formularioSaque";
-                }
-                Optional<User> user1 = userRepository.findByNumCartao(requisicaoTransferencia.getNumCartao());
-                if (user1.isPresent()){
-                    users.add(user1.get());
-                }else{
-                    result.rejectValue("numCartao", "requisicaoSaque", "Conta não localizada");
-                    return "cliente/formularioSaque";
-                }
-            }
+            return "cliente/formularioTransferencia";
         }
 
+        List<User> users = new ArrayList<>();
+        users.add(user);
 
+        clienteService.validaSaldo(result, user, requisicaoTransferencia.getValor());
+        clienteService.validaNumCartao(user, requisicaoTransferencia, result, userRepository, users);
 
-        List<Transacao> transacao = requisicaoTransferencia.realizaPagamento(users);
-        transacaoRepository.saveAll(transacao);
-        userRepository.saveAll(users);
+        if(result.hasErrors()){
+            return "cliente/formularioTransferencia";
+        }
+        clienteService.realizaTransacao(users, requisicaoTransferencia, transacaoRepository, userRepository);
 
         return "redirect:/cliente/home";
     }

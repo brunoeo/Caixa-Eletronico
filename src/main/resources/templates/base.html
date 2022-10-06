@@ -59,6 +59,18 @@
             </div>
 
     <div th:fragment="topo-cliente" class="">
+        <div class="container mt-3 col-sm-2">
+            <div class="card mb-3 mt-2 mx-auto border-success" th:object="${user}">
+                <div class="card-header alert-success" th:text="${user.userName}"></div>
+                <div class="card-body">
+                    <h5 th:text="${'R$ ' + #numbers.formatDecimal(user.saldo,1,'POINT',2,'COMMA')}"></h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<!--    <div th:fragment="topo-cliente" class="">
         <div class="jumbotron mb-3 mt-2 mx-auto" th:object="${user}" style="width: 300px;">
             <div class="container">
                 <p th:text="${user.userName}" style="font-size: 1.8rem;">Nome do Usuario</p>
@@ -66,7 +78,7 @@
             </div>
         </div>
     </div>
-
+-->
 
 
 </body>
