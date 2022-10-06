@@ -5,6 +5,7 @@ import com.br.caixaEletronico.caixaEletronico.domain.User;
 import com.br.caixaEletronico.caixaEletronico.dto.RequisicaoDeposito;
 import com.br.caixaEletronico.caixaEletronico.repositories.TransacaoRepository;
 import com.br.caixaEletronico.caixaEletronico.repositories.UserRepository;
+import com.br.caixaEletronico.caixaEletronico.services.Cliente.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +25,8 @@ public class DepositoController {
     UserRepository userRepository;
     @Autowired
     TransacaoRepository transacaoRepository;
+    @Autowired
+    ClienteService clienteService;
 
     @RequestMapping("formulario/deposito")
     public String formularioDepositar(RequisicaoDeposito requisicaoDeposito){
@@ -49,7 +52,8 @@ public class DepositoController {
             return "cliente/formularioDeposito";
         }
 
-        Transacao transacao = requisicaoDeposito.realizaTransacao(user);
+
+        Transacao transacao = clienteService.realizaTransacao(user, requisicaoDeposito);
         transacaoRepository.save(transacao);
         userRepository.save(user);
 

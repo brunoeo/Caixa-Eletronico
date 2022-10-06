@@ -9,21 +9,23 @@
 
 <div class="container mb-5">
 
-	<div class="card mt-3">
+	<div class="card mt-3 border-info">
 		<div class="card-header">Deposito</div>
 		<form th:object="${requisicaoTransferencia}" class="card-body" th:action="@{/cliente/transferir}" method="POST">
 			<div class="form-group">
-				<label>Número do cartão que será enviado</label>
-				<input th:field="*{numCartao}" th:errorclass="is-invalid" class="form-control" placeholder="Número do cartão"/>
+				<label for="numCartao">Número do cartão</label>
+				<input th:field="*{numCartao}" th:errorclass="is-invalid" class="form-control" placeholder="numCartao"/>
+				<small>Informe qual o cartão do cliente.</small>
 				<div class="invalid-feedback" th:errors="*{numCartao}">
-					Erros no número do cartão
+					Erros no número do numCartao
 				</div>
 			</div>
 			<div class="form-group">
-				<label>Valor do Saque</label>
-				<input th:field="*{valor}" th:errorclass="is-invalid" class="form-control" placeholder="Valor"/>
+				<label for="valor">Valor do Saque</label>
+				<input th:field="*{valor}" th:errorclass="is-invalid" class="form-control" placeholder="valor"/>
+				<small>Informe qual o valor do saque.</small>
 				<div class="invalid-feedback" th:errors="*{valor}">
-					Erros no saque
+					Erros no valor
 				</div>
 			</div>
 			<button class="btn btn-primary" type="submit">Transferir</button>
