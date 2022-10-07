@@ -39,17 +39,16 @@ public class DepositoController {
     @PostMapping("deposita")
     public String deposito(@Valid RequisicaoDeposito requisicaoDeposito, BindingResult result){
 
-
         Optional<User> userOptional = userRepository.findByNumCartao(requisicaoDeposito.getNumCartao());
         User user = new User();
 
         if(result.hasErrors()){
-            return "cliente/formularioDeposito";
+            return "/formularioDeposito";
         }else if(userOptional.isPresent()){
             user = userOptional.get();
         }else {
             result.rejectValue("numCartao", "requisicaoDeposito", "Conta não localizada");
-            return "cliente/formularioDeposito";
+            return "/formularioDeposito";
         }
 
 
