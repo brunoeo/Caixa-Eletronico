@@ -1,5 +1,6 @@
-package com.br.caixaEletronico.caixaEletronico.Security;
+package com.br.caixaEletronico.caixaEletronico.security;
 
+import com.br.caixaEletronico.caixaEletronico.Roles;
 import com.br.caixaEletronico.caixaEletronico.domain.Perfil;
 import com.br.caixaEletronico.caixaEletronico.domain.User;
 import com.br.caixaEletronico.caixaEletronico.repositories.UserRepository;
@@ -22,7 +23,7 @@ public class AutenticacaoADMService implements UserDetailsService {
         Optional<User> user = userRepository.findByCodigo(codigo);
         if (user.isPresent()){
             for (Perfil perfil : user.get().getPerfis()){
-                if (perfil.getNome().equalsIgnoreCase("ADM")){
+                if (Roles.adm.equalsIgnoreCase(perfil.getNome())){
                     return user.get();
                 }else {
                     throw new UsernameNotFoundException("Acesso negado");

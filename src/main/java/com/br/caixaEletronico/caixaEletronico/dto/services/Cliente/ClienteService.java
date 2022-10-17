@@ -1,4 +1,4 @@
-package com.br.caixaEletronico.caixaEletronico.services.Cliente;
+package com.br.caixaEletronico.caixaEletronico.dto.services.Cliente;
 
 import com.br.caixaEletronico.caixaEletronico.domain.TipoTransacao;
 import com.br.caixaEletronico.caixaEletronico.domain.Transacao;
@@ -9,6 +9,7 @@ import com.br.caixaEletronico.caixaEletronico.repositories.UserRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
 import javax.validation.Valid;
@@ -21,6 +22,7 @@ import java.util.Optional;
 @Service
 public class ClienteService {
 
+    @Transactional
     public void atualiza(RequisicaoNovoCliente requisicao, UserRepository userRepository, Authentication auth) {
         auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
@@ -28,7 +30,7 @@ public class ClienteService {
 
         userRepository.save(user);
     }
-
+    @Transactional
     public void deposita(RequisicaoDeposito requisicaoDeposito, Authentication auth, User user,
                          TransacaoRepository transacaoRepository, UserRepository userRepository) {
 
@@ -37,7 +39,7 @@ public class ClienteService {
         userRepository.save(user);
 
     }
-
+    @Transactional
     public Transacao realizaTransacao(User user, RequisicaoDeposito requisicaoDeposito){
         Transacao transacao = new Transacao();
         transacao.setTipoTransacao(TipoTransacao.DEPOSITO);
@@ -47,7 +49,7 @@ public class ClienteService {
         user.setSaldo(new BigDecimal(requisicaoDeposito.getDeposito()).add(user.getSaldo()));
         return transacao;
     }
-
+    @Transactional
     public void realizaTransacao(User user, RequisicaoSaque requisicaoSaque,
                                  TransacaoRepository transacaoRepository, UserRepository userRepository){
 
@@ -62,7 +64,7 @@ public class ClienteService {
         userRepository.save(user);
 
     }
-
+    @Transactional
     public void realizaTransacao(User user, RequisicaoPagamento requisicaoPagamento,
                                  TransacaoRepository transacaoRepository, UserRepository userRepository){
 
@@ -97,7 +99,7 @@ public class ClienteService {
         }
     }
 
-
+    @Transactional
     public void realizaTransacao(List<User> users, RequisicaoTransferencia requisicaoTransferencia,
                                  TransacaoRepository transacaoRepository, UserRepository userRepository) {
 
@@ -125,6 +127,5 @@ public class ClienteService {
 
         transacaoRepository.saveAll(transacao);
         userRepository.saveAll(users);
-
     }
 }

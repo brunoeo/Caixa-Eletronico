@@ -1,11 +1,11 @@
 package com.br.caixaEletronico.caixaEletronico.controllers;
 
-import com.br.caixaEletronico.caixaEletronico.domain.Transacao;
+import com.br.caixaEletronico.caixaEletronico.Roles;
 import com.br.caixaEletronico.caixaEletronico.domain.User;
 import com.br.caixaEletronico.caixaEletronico.dto.*;
 import com.br.caixaEletronico.caixaEletronico.repositories.TransacaoRepository;
 import com.br.caixaEletronico.caixaEletronico.repositories.UserRepository;
-import com.br.caixaEletronico.caixaEletronico.services.Cliente.ClienteService;
+import com.br.caixaEletronico.caixaEletronico.dto.services.Cliente.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -13,28 +13,28 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("cliente")
-@PreAuthorize("hasAuthority('CLIENTE')")
+@PreAuthorize("hasAuthority('" + Roles.cliente + "')")
 public class ClienteController {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
-    TransacaoRepository transacaoRepository;
+    private TransacaoRepository transacaoRepository;
     @Autowired
-    ClienteService clienteService;
+    private ClienteService clienteService;
 
 
-    @RequestMapping("home")
+    @GetMapping("home")
     public String home(Model model){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
@@ -42,13 +42,13 @@ public class ClienteController {
         return "cliente/home";
     }
 
-    @RequestMapping("login")
+    @GetMapping("login")
     public String login(){
 
         return "cliente/login";
     }
 
-    @RequestMapping("formulario/alteracao")
+    @GetMapping("formulario/alteracao")
     public String formularioAlterar(Model model, Authentication auth, RequisicaoNovoCliente requisicaoNovoCliente){
 
         auth = SecurityContextHolder.getContext().getAuthentication();
@@ -95,7 +95,7 @@ public class ClienteController {
         return "redirect:/cliente/home";
     }
 
-    @RequestMapping("formulario/sacar")
+    @GetMapping("formulario/sacar")
     public String formularioSaque(Model model, RequisicaoSaque requisicaoSaque){
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -127,7 +127,7 @@ public class ClienteController {
         return "redirect:/cliente/home";
     }
 
-    @RequestMapping("formulario/pagamento")
+    @GetMapping("formulario/pagamento")
     public String formularioPagamento(Model model, RequisicaoPagamento requisicaoPagamento){
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -158,7 +158,7 @@ public class ClienteController {
         return "redirect:/cliente/home";
     }
 
-    @RequestMapping("formulario/transferencia")
+    @GetMapping("formulario/transferencia")
     public String formularioTransferencia(Model model, RequisicaoTransferencia requisicaoTransferencia){
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -194,7 +194,7 @@ public class ClienteController {
         return "redirect:/cliente/home";
     }
 
-    @RequestMapping("extrato")
+    @GetMapping("extrato")
     public String extrato(Model model){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
