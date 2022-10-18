@@ -1,8 +1,8 @@
 package com.br.caixaEletronico.caixaEletronico.security;
 
-import com.br.caixaEletronico.caixaEletronico.Roles;
-import com.br.caixaEletronico.caixaEletronico.domain.Perfil;
-import com.br.caixaEletronico.caixaEletronico.domain.User;
+import com.br.caixaEletronico.caixaEletronico.domain.Roles;
+import com.br.caixaEletronico.caixaEletronico.domain.entities.Perfil;
+import com.br.caixaEletronico.caixaEletronico.domain.entities.User;
 import com.br.caixaEletronico.caixaEletronico.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

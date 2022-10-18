@@ -1,10 +1,16 @@
-package com.br.caixaEletronico.caixaEletronico.domain;
+package com.br.caixaEletronico.caixaEletronico.domain.entities;
 
 
+import com.br.caixaEletronico.caixaEletronico.domain.entities.Endereco;
+import com.br.caixaEletronico.caixaEletronico.domain.entities.Perfil;
+import com.br.caixaEletronico.caixaEletronico.domain.entities.Transacao;
+import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,19 +23,33 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotNull
+    @Column(nullable = false, length = 50)
     private String userName;
+    @NotNull
+    @Column(nullable = false, length = 50)
     private String senha;
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Perfil> perfis = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY)
     private List<Transacao> transacoes = new ArrayList<>();
+    @Column(length = 16)
     private String numCartao;
+    @Column(length = 10)
     private String codigo;
+    @NotNull
+    @Column(nullable = false, length = 20)
+    @Pattern(regexp = "^\\d{2} \\d{5}-\\d{4}$")
     private String telefone;
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "endereco_id")
     private Endereco endereco;
+    @NotNull
+    @Column(nullable = false)
+    @CPF
     private String cpf;
+    @NotNull
+    @Column(nullable = false)
     private Boolean enable;
     private BigDecimal saldo;
 

@@ -1,20 +1,22 @@
 package com.br.caixaEletronico.caixaEletronico.dto;
 
-import com.br.caixaEletronico.caixaEletronico.domain.Endereco;
-import com.br.caixaEletronico.caixaEletronico.domain.User;
+import com.br.caixaEletronico.caixaEletronico.domain.entities.Endereco;
+import com.br.caixaEletronico.caixaEletronico.domain.entities.User;
 import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Pattern;
 
 public class RequisicaoNovoADM {
 
     @NotBlank
     private String nome;
     @NotBlank
+    @Pattern(regexp = "^\\d{2} \\d{5}-\\d{4}$")
     private String telefone;
     @NotBlank
+    @Pattern(regexp = "^\\d{5}-\\d{3}$")
     private String cep;
     @NotBlank
     private String num;

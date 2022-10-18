@@ -1,11 +1,12 @@
 package com.br.caixaEletronico.caixaEletronico.controllers;
 
-import com.br.caixaEletronico.caixaEletronico.Roles;
-import com.br.caixaEletronico.caixaEletronico.domain.User;
+import com.br.caixaEletronico.caixaEletronico.domain.AutenticacaoHelper;
+import com.br.caixaEletronico.caixaEletronico.domain.Roles;
+import com.br.caixaEletronico.caixaEletronico.domain.entities.User;
 import com.br.caixaEletronico.caixaEletronico.dto.*;
 import com.br.caixaEletronico.caixaEletronico.repositories.TransacaoRepository;
 import com.br.caixaEletronico.caixaEletronico.repositories.UserRepository;
-import com.br.caixaEletronico.caixaEletronico.dto.services.Cliente.ClienteService;
+import com.br.caixaEletronico.caixaEletronico.services.Cliente.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -60,12 +61,12 @@ public class ClienteController {
     }
 
     @PostMapping("atualizaCliente")
-    public String atualiza(@Valid RequisicaoNovoCliente requisicao, BindingResult result, Authentication auth){
+    public String atualiza(@Valid RequisicaoNovoCliente requisicao, BindingResult result){
         if(result.hasErrors()){
             return "cliente/formularioAlteracao";
         }
 
-        clienteService.atualiza(requisicao, userRepository, auth);
+        clienteService.atualiza(requisicao, userRepository);
 
         return "redirect:/cliente/home";
     }
@@ -85,21 +86,18 @@ public class ClienteController {
     @PostMapping("deposita")
     public String deposito(@Valid RequisicaoDeposito requisicaoDeposito, BindingResult result, Model model, Authentication auth){
 
-        auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) auth.getPrincipal();
+        User user = AutenticacaoHelper.getUsuarioAutenticado();
         model.addAttribute("user", user);
         if(result.hasErrors()){
             return "cliente/formularioDeposito";
         }
-        clienteService.deposita(requisicaoDeposito, auth, user, transacaoRepository, userRepository);
+        clienteService.deposita(requisicaoDeposito, user, transacaoRepository, userRepository);
         return "redirect:/cliente/home";
     }
 
     @GetMapping("formulario/sacar")
     public String formularioSaque(Model model, RequisicaoSaque requisicaoSaque){
-
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) auth.getPrincipal();
+        User user = AutenticacaoHelper.getUsuarioAutenticado();
         requisicaoSaque.setNumCartao(user.getNumCartao());
         model.addAttribute("user", user);
 
@@ -109,8 +107,7 @@ public class ClienteController {
     @PostMapping("saca")
     public String saca(@Valid RequisicaoSaque requisicaoSaque, BindingResult result, Model model){
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) auth.getPrincipal();
+        User user = AutenticacaoHelper.getUsuarioAutenticado();
         model.addAttribute("user", user);
         if(result.hasErrors()){
             return "cliente/formularioSaque";
@@ -130,8 +127,7 @@ public class ClienteController {
     @GetMapping("formulario/pagamento")
     public String formularioPagamento(Model model, RequisicaoPagamento requisicaoPagamento){
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) auth.getPrincipal();
+        User user = AutenticacaoHelper.getUsuarioAutenticado();
         model.addAttribute("user", user);
 
         return "cliente/formularioPagamento";
@@ -140,9 +136,9 @@ public class ClienteController {
     @PostMapping("pagar")
     public String pagar(@Valid RequisicaoPagamento requisicaoPagamento, BindingResult result, Model model){
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) auth.getPrincipal();
+        User user = AutenticacaoHelper.getUsuarioAutenticado();
         model.addAttribute("user", user);
+
         if(result.hasErrors()){
             return "cliente/formularioPagamento";
         }
@@ -161,8 +157,7 @@ public class ClienteController {
     @GetMapping("formulario/transferencia")
     public String formularioTransferencia(Model model, RequisicaoTransferencia requisicaoTransferencia){
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) auth.getPrincipal();
+        User user = AutenticacaoHelper.getUsuarioAutenticado();
         model.addAttribute("user", user);
 
         return "cliente/formularioTransferencia";
@@ -170,10 +165,9 @@ public class ClienteController {
 
     @PostMapping("transferir")
     public String transferir(@Valid RequisicaoTransferencia requisicaoTransferencia,
-                             BindingResult result, Model model, Authentication auth){
+                             BindingResult result, Model model){
 
-        auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) auth.getPrincipal();
+        User user = AutenticacaoHelper.getUsuarioAutenticado();
         model.addAttribute("user", user);
 
         if(result.hasErrors()){
@@ -196,8 +190,7 @@ public class ClienteController {
 
     @GetMapping("extrato")
     public String extrato(Model model){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) auth.getPrincipal();
+        User user = AutenticacaoHelper.getUsuarioAutenticado();
         user.setTransacoes(transacaoRepository.findByUserId(user.getId()));
         model.addAttribute("user", user);
         return "cliente/extrato";

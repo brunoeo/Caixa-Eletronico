@@ -1,4 +1,4 @@
-package com.br.caixaEletronico.caixaEletronico;
+package com.br.caixaEletronico.caixaEletronico.domain;
 
 public class Roles {
 

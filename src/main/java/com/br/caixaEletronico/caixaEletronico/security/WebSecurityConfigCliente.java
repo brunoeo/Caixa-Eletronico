@@ -19,10 +19,6 @@ public class WebSecurityConfigCliente extends WebSecurityConfigurerAdapter {
     @Autowired
     private CryptPassword cryptPassword;
 
-    public WebSecurityConfigCliente(){
-        super();
-    }
-
     //Configuracoes de autorizacao
     @Override
     protected void configure(HttpSecurity http) throws Exception {

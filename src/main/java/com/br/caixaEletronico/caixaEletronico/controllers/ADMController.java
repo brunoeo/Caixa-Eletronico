@@ -1,13 +1,13 @@
 package com.br.caixaEletronico.caixaEletronico.controllers;
 
-import com.br.caixaEletronico.caixaEletronico.Roles;
-import com.br.caixaEletronico.caixaEletronico.domain.User;
+import com.br.caixaEletronico.caixaEletronico.domain.Roles;
+import com.br.caixaEletronico.caixaEletronico.domain.entities.User;
 import com.br.caixaEletronico.caixaEletronico.dto.RequisicaoNovoADM;
 import com.br.caixaEletronico.caixaEletronico.dto.RequisicaoNovoCliente;
 import com.br.caixaEletronico.caixaEletronico.repositories.EnderecoRepository;
 import com.br.caixaEletronico.caixaEletronico.repositories.PerfilRepository;
 import com.br.caixaEletronico.caixaEletronico.repositories.UserRepository;
-import com.br.caixaEletronico.caixaEletronico.dto.services.ADM.ADMService;
+import com.br.caixaEletronico.caixaEletronico.services.ADM.ADMService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;

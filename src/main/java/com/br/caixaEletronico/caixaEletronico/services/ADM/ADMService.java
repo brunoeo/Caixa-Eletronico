@@ -1,17 +1,15 @@
-package com.br.caixaEletronico.caixaEletronico.dto.services.ADM;
+package com.br.caixaEletronico.caixaEletronico.services.ADM;
 
-import com.br.caixaEletronico.caixaEletronico.Roles;
-import com.br.caixaEletronico.caixaEletronico.domain.Endereco;
-import com.br.caixaEletronico.caixaEletronico.domain.Perfil;
-import com.br.caixaEletronico.caixaEletronico.domain.User;
+import com.br.caixaEletronico.caixaEletronico.domain.Roles;
+import com.br.caixaEletronico.caixaEletronico.domain.entities.Endereco;
+import com.br.caixaEletronico.caixaEletronico.domain.entities.Perfil;
+import com.br.caixaEletronico.caixaEletronico.domain.entities.User;
 import com.br.caixaEletronico.caixaEletronico.dto.RequisicaoNovoADM;
 import com.br.caixaEletronico.caixaEletronico.dto.RequisicaoNovoCliente;
 import com.br.caixaEletronico.caixaEletronico.repositories.EnderecoRepository;
 import com.br.caixaEletronico.caixaEletronico.repositories.PerfilRepository;
 import com.br.caixaEletronico.caixaEletronico.repositories.UserRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;

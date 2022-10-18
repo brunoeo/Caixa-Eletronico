@@ -19,9 +19,6 @@ public class WebSecurityConfigADM extends WebSecurityConfigurerAdapter {
     @Autowired
     private CryptPassword cryptPassword;
 
-    public WebSecurityConfigADM(){
-        super();
-    }
     //Configuracoes de autorizacao
     @Override
     protected void configure(HttpSecurity http) throws Exception {
