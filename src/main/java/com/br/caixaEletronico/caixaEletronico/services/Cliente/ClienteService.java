@@ -66,7 +66,7 @@ public class ClienteService {
     public void realizaTransacao(User user, RequisicaoPagamento requisicaoPagamento,
                                  TransacaoRepository transacaoRepository, UserRepository userRepository){
         Transacao transacao = new Transacao();
-        transacao.setTipoTransacao(TipoTransacao.SAQUE);
+        transacao.setTipoTransacao(TipoTransacao.PAGAMENTO);
         BigDecimal valorSaque = new BigDecimal(requisicaoPagamento.getValor()).multiply(BigDecimal.valueOf(-1));
         transacao.setValor(valorSaque);
         transacao.setDate(LocalDate.now());
