@@ -2,7 +2,7 @@ package com.br.caixaEletronico.caixaEletronico.controllers;
 
 import com.br.caixaEletronico.caixaEletronico.domain.entities.Transacao;
 import com.br.caixaEletronico.caixaEletronico.domain.entities.User;
-import com.br.caixaEletronico.caixaEletronico.dto.RequisicaoDeposito;
+import com.br.caixaEletronico.caixaEletronico.dto.requisicoes.RequisicaoDeposito;
 import com.br.caixaEletronico.caixaEletronico.repositories.TransacaoRepository;
 import com.br.caixaEletronico.caixaEletronico.repositories.UserRepository;
 import com.br.caixaEletronico.caixaEletronico.services.Cliente.ClienteService;

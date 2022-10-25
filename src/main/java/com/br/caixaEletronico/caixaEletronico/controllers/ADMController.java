@@ -2,8 +2,8 @@ package com.br.caixaEletronico.caixaEletronico.controllers;
 
 import com.br.caixaEletronico.caixaEletronico.domain.Roles;
 import com.br.caixaEletronico.caixaEletronico.domain.entities.User;
-import com.br.caixaEletronico.caixaEletronico.dto.RequisicaoNovoADM;
-import com.br.caixaEletronico.caixaEletronico.dto.RequisicaoNovoCliente;
+import com.br.caixaEletronico.caixaEletronico.dto.requisicoes.RequisicaoNovoADM;
+import com.br.caixaEletronico.caixaEletronico.dto.requisicoes.RequisicaoNovoCliente;
 import com.br.caixaEletronico.caixaEletronico.repositories.EnderecoRepository;
 import com.br.caixaEletronico.caixaEletronico.repositories.PerfilRepository;
 import com.br.caixaEletronico.caixaEletronico.repositories.UserRepository;
@@ -43,7 +43,6 @@ public class ADMController {
         //userRepository.deleteById(9L);
 
         List<User> users = admService.buscaUsuarios(principal.getName(), userRepository);
-
         model.addAttribute("users", users);
         return "adm/home";
     }

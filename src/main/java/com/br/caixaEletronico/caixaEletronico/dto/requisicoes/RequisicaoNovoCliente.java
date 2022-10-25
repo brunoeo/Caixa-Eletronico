@@ -1,4 +1,4 @@
-package com.br.caixaEletronico.caixaEletronico.dto;
+package com.br.caixaEletronico.caixaEletronico.dto.requisicoes;
 
 import com.br.caixaEletronico.caixaEletronico.domain.entities.Endereco;
 import com.br.caixaEletronico.caixaEletronico.domain.entities.User;
@@ -14,7 +14,7 @@ public class RequisicaoNovoCliente {
 
     private Long id;
     @NotBlank
-    private String nome;
+    private String userName;
     @NotBlank
     @Pattern(regexp = "^\\d{2} \\d{5}-\\d{4}$")
     private String telefone;
@@ -47,12 +47,12 @@ public class RequisicaoNovoCliente {
         this.cpf = cpf;
     }
 
-    public String getNome() {
-        return nome;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getTelefone() {
@@ -135,59 +135,4 @@ public class RequisicaoNovoCliente {
         this.complemento = complemento;
     }
 
-    public User toUser() {
-        User user = new User();
-        user.setUserName(this.nome);
-        user.setSenha(new BCryptPasswordEncoder().encode(this.senha));
-        user.setNumCartao(this.numCartao);
-        user.setCpf(this.cpf);
-        user.setTelefone(this.telefone);
-        user.setEnable(true);
-        user.setSaldo(new BigDecimal(0));
-        return user;
-    }
-
-    public Endereco toEndereco() {
-        Endereco endereco = new Endereco();
-        endereco.setRua(this.rua);
-        endereco.setBairro(this.bairro);
-        endereco.setCep(this.cep);
-        endereco.setCidade(this.cidade);
-        endereco.setComplemento(this.complemento);
-        endereco.setNum(this.num);
-        return endereco;
-    }
-
-    public void toRequisicao(User user) {
-        this.nome = user.getUserName();
-        this.senha = user.getSenha();
-        this.numCartao = user.getNumCartao();
-        this.cpf = user.getCpf();
-        this.telefone = user.getTelefone();
-        this.setRua(user.getEndereco().getRua());
-        this.setBairro(user.getEndereco().getBairro());
-        this.setCep(user.getEndereco().getCep());
-        this.setCidade(user.getEndereco().getCidade());
-        this.setComplemento(user.getEndereco().getComplemento());
-        this.setNum(user.getEndereco().getNum());
-        this.id = user.getId();
-    }
-
-    public void atualizaUser(User user){
-        user.setUserName(this.nome);
-        user.setSenha(new BCryptPasswordEncoder().encode(this.senha));
-        user.setNumCartao(this.numCartao);
-        user.setCpf(this.cpf);
-        user.setTelefone(this.telefone);
-        atualizaEndereco(user.getEndereco());
-    }
-
-    private void atualizaEndereco(Endereco endereco) {
-        endereco.setRua(this.rua);
-        endereco.setBairro(this.bairro);
-        endereco.setCep(this.cep);
-        endereco.setCidade(this.cidade);
-        endereco.setComplemento(this.complemento);
-        endereco.setNum(this.num);
-    }
 }

@@ -1,5 +1,6 @@
 package com.br.caixaEletronico.caixaEletronico.security;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,5 +14,8 @@ public class BeanConfig {
     public PasswordEncoder getPasswordEncoder(){
         return new BCryptPasswordEncoder();
     }
+
+    @Bean("modelMapper")
+    public ModelMapper getModelMapper(){return new ModelMapper();}
 
 }

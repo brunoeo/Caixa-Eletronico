@@ -3,10 +3,12 @@ package com.br.caixaEletronico.caixaEletronico.controllers;
 import com.br.caixaEletronico.caixaEletronico.domain.AutenticacaoHelper;
 import com.br.caixaEletronico.caixaEletronico.domain.Roles;
 import com.br.caixaEletronico.caixaEletronico.domain.entities.User;
-import com.br.caixaEletronico.caixaEletronico.dto.*;
+import com.br.caixaEletronico.caixaEletronico.dto.mapper.ClienteMapper;
+import com.br.caixaEletronico.caixaEletronico.dto.requisicoes.*;
 import com.br.caixaEletronico.caixaEletronico.repositories.TransacaoRepository;
 import com.br.caixaEletronico.caixaEletronico.repositories.UserRepository;
 import com.br.caixaEletronico.caixaEletronico.services.Cliente.ClienteService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -33,6 +35,8 @@ public class ClienteController {
     private TransacaoRepository transacaoRepository;
     @Autowired
     private ClienteService clienteService;
+    @Autowired
+    ClienteMapper clienteMapper;
 
 
     @GetMapping("home")
@@ -54,7 +58,7 @@ public class ClienteController {
 
         auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
-        requisicaoNovoCliente.toRequisicao(user);
+        clienteMapper.toRequisicao(user, requisicaoNovoCliente);
         model.addAttribute("cliente", requisicaoNovoCliente);
 
         return "cliente/formularioAlteracao";
@@ -91,7 +95,7 @@ public class ClienteController {
         if(result.hasErrors()){
             return "cliente/formularioDeposito";
         }
-        clienteService.deposita(requisicaoDeposito, user, transacaoRepository, userRepository);
+        clienteService.deposita(requisicaoDeposito, user, userRepository);
         return "redirect:/cliente/home";
     }
 
@@ -119,7 +123,7 @@ public class ClienteController {
             return "cliente/formularioSaque";
         }
 
-        clienteService.realizaTransacao(user, requisicaoSaque, transacaoRepository, userRepository);
+        clienteService.realizaTransacao(user, requisicaoSaque, userRepository);
 
         return "redirect:/cliente/home";
     }
@@ -148,7 +152,7 @@ public class ClienteController {
             return "cliente/formularioPagamento";
         }
 
-        clienteService.realizaTransacao(user, requisicaoPagamento, transacaoRepository, userRepository);
+        clienteService.realizaTransacao(user, requisicaoPagamento, userRepository);
 
 
         return "redirect:/cliente/home";
@@ -183,7 +187,7 @@ public class ClienteController {
         if(result.hasErrors()){
             return "cliente/formularioTransferencia";
         }
-        clienteService.realizaTransacao(users, requisicaoTransferencia, transacaoRepository, userRepository);
+        clienteService.realizaTransacao(users, requisicaoTransferencia, userRepository);
 
         return "redirect:/cliente/home";
     }
@@ -191,7 +195,7 @@ public class ClienteController {
     @GetMapping("extrato")
     public String extrato(Model model){
         User user = AutenticacaoHelper.getUsuarioAutenticado();
-        user.setTransacoes(transacaoRepository.findByUserId(user.getId()));
+        user.setTransacoes(clienteService.buscaTransacoes(user.getId()));
         model.addAttribute("user", user);
         return "cliente/extrato";
     }

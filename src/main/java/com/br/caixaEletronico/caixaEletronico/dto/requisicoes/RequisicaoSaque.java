@@ -1,4 +1,4 @@
-package com.br.caixaEletronico.caixaEletronico.dto;
+package com.br.caixaEletronico.caixaEletronico.dto.requisicoes;
 
 
 import javax.validation.constraints.NotBlank;
