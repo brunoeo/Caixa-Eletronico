@@ -1,6 +1,6 @@
 package com.br.caixaEletronico.caixaEletronico.repositories;
 
-import com.br.caixaEletronico.caixaEletronico.domain.Endereco;
+import com.br.caixaEletronico.caixaEletronico.domain.entities.Endereco;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

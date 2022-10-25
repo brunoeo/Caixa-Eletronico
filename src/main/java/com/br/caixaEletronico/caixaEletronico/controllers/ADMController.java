@@ -1,10 +1,9 @@
 package com.br.caixaEletronico.caixaEletronico.controllers;
 
-import com.br.caixaEletronico.caixaEletronico.domain.Endereco;
-import com.br.caixaEletronico.caixaEletronico.domain.Perfil;
-import com.br.caixaEletronico.caixaEletronico.domain.User;
-import com.br.caixaEletronico.caixaEletronico.dto.RequisicaoNovoADM;
-import com.br.caixaEletronico.caixaEletronico.dto.RequisicaoNovoCliente;
+import com.br.caixaEletronico.caixaEletronico.domain.Roles;
+import com.br.caixaEletronico.caixaEletronico.domain.entities.User;
+import com.br.caixaEletronico.caixaEletronico.dto.requisicoes.RequisicaoNovoADM;
+import com.br.caixaEletronico.caixaEletronico.dto.requisicoes.RequisicaoNovoCliente;
 import com.br.caixaEletronico.caixaEletronico.repositories.EnderecoRepository;
 import com.br.caixaEletronico.caixaEletronico.repositories.PerfilRepository;
 import com.br.caixaEletronico.caixaEletronico.repositories.UserRepository;
@@ -14,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,41 +24,40 @@ import java.util.List;
 
 @Controller
 @RequestMapping("adm")
-@PreAuthorize("hasAuthority('ADM')")
+@PreAuthorize("hasAuthority('" + Roles.adm +"')")
 public class ADMController {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    PerfilRepository perfilRepository;
+    private PerfilRepository perfilRepository;
 
     @Autowired
-    ADMService admService;
+    private ADMService admService;
     @Autowired
-    EnderecoRepository enderecoRepository;
+    private EnderecoRepository enderecoRepository;
 
-    @RequestMapping("home")
+    @GetMapping("home")
     public String home(Model model, Principal principal){
         //userRepository.deleteById(9L);
 
-        List<User> users = admService.listarUsuarios(principal.getName(), userRepository);
-
+        List<User> users = admService.buscaUsuarios(principal.getName(), userRepository);
         model.addAttribute("users", users);
         return "adm/home";
     }
 
-    @RequestMapping("login")
+    @GetMapping("login")
     public String login(){
         return "adm/login";
     }
 
-    @RequestMapping("novoCliente")
+    @GetMapping("novoCliente")
     public String novoCliente(RequisicaoNovoCliente requisicaoNovoCliente){
         return "adm/formularioCliente";
     }
 
-    @RequestMapping("novoADM")
+    @GetMapping("novoADM")
     public String novoADM(RequisicaoNovoADM requisicao){
         return "adm/formularioADM";
     }

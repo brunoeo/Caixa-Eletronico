@@ -1,20 +1,19 @@
-package com.br.caixaEletronico.caixaEletronico.dto;
+package com.br.caixaEletronico.caixaEletronico.dto.requisicoes;
 
-import com.br.caixaEletronico.caixaEletronico.domain.Endereco;
-import com.br.caixaEletronico.caixaEletronico.domain.User;
 import org.hibernate.validator.constraints.br.CPF;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Pattern;
 
 public class RequisicaoNovoADM {
 
     @NotBlank
-    private String nome;
+    private String userName;
     @NotBlank
+    @Pattern(regexp = "^\\d{2} \\d{5}-\\d{4}$")
     private String telefone;
     @NotBlank
+    @Pattern(regexp = "^\\d{5}-\\d{3}$")
     private String cep;
     @NotBlank
     private String num;
@@ -42,12 +41,12 @@ public class RequisicaoNovoADM {
         this.cpf = cpf;
     }
 
-    public String getNome() {
-        return nome;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getTelefone() {
@@ -122,25 +121,4 @@ public class RequisicaoNovoADM {
         this.complemento = complemento;
     }
 
-    public User toUser() {
-        User user = new User();
-        user.setUserName(this.nome);
-        user.setSenha(new BCryptPasswordEncoder().encode(this.senha));
-        user.setCodigo(this.codigo);
-        user.setCpf(this.cpf);
-        user.setTelefone(this.telefone);
-        user.setEnable(true);
-        return user;
-    }
-
-    public Endereco toEndereco() {
-        Endereco endereco = new Endereco();
-        endereco.setRua(this.rua);
-        endereco.setBairro(this.bairro);
-        endereco.setCep(this.cep);
-        endereco.setCidade(this.cidade);
-        endereco.setComplemento(this.complemento);
-        endereco.setNum(this.num);
-        return endereco;
-    }
 }

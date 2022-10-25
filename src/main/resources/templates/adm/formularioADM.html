@@ -11,10 +11,10 @@
             <div class="card-header">Cadastro ADM</div>
             <form th:object="${requisicaoNovoADM}" class="card-body" th:action="@{/adm/novoADM}" method="POST">
                 <div class="form-group">
-                    <label for="nome">Nome do Administrador</label>
-                    <input th:field="*{nome}" th:errorclass="is-invalid" class="form-control" placeholder="Nome do cliente"/>
+                    <label for="userName">Nome do Administrador</label>
+                    <input th:field="*{userName}" th:errorclass="is-invalid" class="form-control" placeholder="Nome do cliente"/>
                     <small>Informe qual o nome do administrador.</small>
-                    <div class="invalid-feedback" th:errors="*{nome}">
+                    <div class="invalid-feedback" th:errors="*{userName}">
                         Erros no nome do administrador
                     </div>
                 </div>

@@ -14,7 +14,7 @@
 		<form th:object="${requisicaoTransferencia}" class="card-body" th:action="@{/cliente/transferir}" method="POST">
 			<div class="form-group">
 				<label for="numCartao">Número do cartão</label>
-				<input th:field="*{numCartao}" th:errorclass="is-invalid" class="form-control" placeholder="numCartao"/>
+				<input th:field="*{numCartao}" th:errorclass="is-invalid" class="form-control" placeholder="Número do Cartão"/>
 				<small>Informe qual o cartão do cliente.</small>
 				<div class="invalid-feedback" th:errors="*{numCartao}">
 					Erros no número do numCartao

@@ -1,16 +1,13 @@
-package com.br.caixaEletronico.caixaEletronico.dto;
-
+package com.br.caixaEletronico.caixaEletronico.dto.requisicoes;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
-
-public class RequisicaoDeposito {
-
+public class RequisicaoTransferencia {
     @NotBlank
     private String numCartao;
     @Pattern(regexp = "^\\d+(\\.\\d{2})?$", message = "Formato inválido")
-    private String deposito;
+    private String valor;
 
     public String getNumCartao() {
         return numCartao;
@@ -20,13 +17,12 @@ public class RequisicaoDeposito {
         this.numCartao = numCartao;
     }
 
-    public String getDeposito() {
-        return deposito;
+    public String getValor() {
+        return valor;
     }
 
-    public void setDeposito(String deposito) {
-        this.deposito = deposito;
+    public void setValor(String valor) {
+        this.valor = valor;
     }
-
 
 }

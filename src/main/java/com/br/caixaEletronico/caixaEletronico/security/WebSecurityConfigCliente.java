@@ -1,4 +1,4 @@
-package com.br.caixaEletronico.caixaEletronico.Security;
+package com.br.caixaEletronico.caixaEletronico.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 @Configuration
@@ -16,16 +17,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class WebSecurityConfigCliente extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    AutenticacaoClienteService autenticacaoClienteService;
-
-    public WebSecurityConfigCliente(){
-        super();
-    }
+    private AutenticacaoClienteService autenticacaoClienteService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     //Configuracoes de autorizacao
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.antMatcher("/cliente/**")
+                .csrf().disable()
                 .authorizeRequests()
                 .anyRequest().authenticated()
                 .and().
@@ -37,7 +37,6 @@ public class WebSecurityConfigCliente extends WebSecurityConfigurerAdapter {
                 .logout(logout -> {logout.logoutUrl("/cliente/logout")
                         .logoutSuccessUrl("/cliente/login");
                 })
-                .csrf().disable()
         ;
 
     }
@@ -45,7 +44,7 @@ public class WebSecurityConfigCliente extends WebSecurityConfigurerAdapter {
     //Configuracoes de autenticacao
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(autenticacaoClienteService).passwordEncoder(new BCryptPasswordEncoder());
+        auth.userDetailsService(autenticacaoClienteService).passwordEncoder(passwordEncoder);
     }
 
 }

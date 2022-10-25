@@ -1,6 +1,8 @@
-package com.br.caixaEletronico.caixaEletronico.domain;
+package com.br.caixaEletronico.caixaEletronico.domain.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @Entity
 public class Endereco {
@@ -8,12 +10,24 @@ public class Endereco {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @NotNull
+    @Pattern(regexp = "^\\d{5}-\\d{3}$")
+    @Column(nullable = false, length = 9)
     private String cep;
+    @NotNull
+    @Column(nullable = false, length = 5)
     private String num;
+    @NotNull
+    @Column(nullable = false, length = 50)
     private String rua;
+    @NotNull
+    @Column(nullable = false, length = 50)
     private String bairro;
+    @NotNull
+    @Column(nullable = false, length = 50)
     private String cidade;
+    @NotNull
+    @Column(nullable = false, length = 100)
     private String complemento;
 
     public String getCep() {

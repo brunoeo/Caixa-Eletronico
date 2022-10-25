@@ -1,19 +1,16 @@
 package com.br.caixaEletronico.caixaEletronico.controllers;
 
-import com.br.caixaEletronico.caixaEletronico.domain.Transacao;
-import com.br.caixaEletronico.caixaEletronico.domain.User;
-import com.br.caixaEletronico.caixaEletronico.dto.RequisicaoDeposito;
+import com.br.caixaEletronico.caixaEletronico.domain.entities.Transacao;
+import com.br.caixaEletronico.caixaEletronico.domain.entities.User;
+import com.br.caixaEletronico.caixaEletronico.dto.requisicoes.RequisicaoDeposito;
 import com.br.caixaEletronico.caixaEletronico.repositories.TransacaoRepository;
 import com.br.caixaEletronico.caixaEletronico.repositories.UserRepository;
 import com.br.caixaEletronico.caixaEletronico.services.Cliente.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 import java.util.Optional;
@@ -22,13 +19,13 @@ import java.util.Optional;
 public class DepositoController {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
-    TransacaoRepository transacaoRepository;
+    private TransacaoRepository transacaoRepository;
     @Autowired
-    ClienteService clienteService;
+    private ClienteService clienteService;
 
-    @RequestMapping("formulario/deposito")
+    @GetMapping("formulario/deposito")
     public String formularioDepositar(RequisicaoDeposito requisicaoDeposito){
 
 
