@@ -36,7 +36,7 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
     @Autowired
-    ClienteMapper clienteMapper;
+    private ClienteMapper clienteMapper;
 
 
     @GetMapping("home")

@@ -15,10 +15,10 @@ import java.math.BigDecimal;
 public class ADMMapper {
 
     @Autowired
-    ModelMapper modelMapper;
+    private ModelMapper modelMapper;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
 
 

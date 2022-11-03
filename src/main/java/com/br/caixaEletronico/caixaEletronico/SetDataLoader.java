@@ -18,9 +18,11 @@ import java.util.stream.Collectors;
 @Component
 public class SetDataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
-    boolean alreadySetup = false;
+    private boolean alreadySetup = false;
     @Autowired
-    TransacaoRepository transacaoRepository;
+    private TransacaoRepository transacaoRepository;
+    @Autowired
+    private UserRepository userRepository;
 
 
     @Override

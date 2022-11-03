@@ -14,10 +14,10 @@ import java.math.BigDecimal;
 public class ClienteMapper {
 
     @Autowired
-    ModelMapper modelMapper;
+    private ModelMapper modelMapper;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     public User toUser(RequisicaoNovoCliente requisicao) {
         User user = modelMapper.map(requisicao, User.class);
@@ -36,20 +36,20 @@ public class ClienteMapper {
         modelMapper.map(user.getEndereco(), requisicao);
     }
     public void atualizaUser(User user, RequisicaoNovoCliente requisicao){
-        Endereco endereco = this.atualizaEndereco(user.getEndereco(), requisicao);
+        requisicao.setId(user.getId());
+        this.atualizaEndereco(user.getEndereco(), requisicao);
         modelMapper.map(requisicao, user);
-        user.setEndereco(endereco);
+        user.setSenha(passwordEncoder.encode(requisicao.getSenha()));
 
     }
 
-    private Endereco atualizaEndereco(Endereco endereco, RequisicaoNovoCliente requisicao) {
+    private void atualizaEndereco(Endereco endereco, RequisicaoNovoCliente requisicao) {
         endereco.setRua(requisicao.getRua());
         endereco.setBairro(requisicao.getBairro());
         endereco.setCep(requisicao.getCep());
         endereco.setCidade(requisicao.getCidade());
         endereco.setComplemento(requisicao.getComplemento());
         endereco.setNum(requisicao.getNum());
-        return endereco;
     }
 
 }

@@ -2,14 +2,16 @@ package com.br.caixaEletronico.caixaEletronico.dto.requisicoes;
 
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.math.BigDecimal;
 
 public class RequisicaoSaque {
 
     @NotBlank
     private String numCartao;
-    @Pattern(regexp = "^\\d+(\\.\\d{2})?$", message = "Formato inválido")
-    private String saque;
+    @NotNull
+    private BigDecimal saque;
 
     public String getNumCartao() {
         return numCartao;
@@ -19,11 +21,11 @@ public class RequisicaoSaque {
         this.numCartao = numCartao;
     }
 
-    public String getSaque() {
+    public BigDecimal getSaque() {
         return saque;
     }
 
-    public void setSaque(String saque) {
+    public void setSaque(BigDecimal saque) {
         this.saque = saque;
     }
 

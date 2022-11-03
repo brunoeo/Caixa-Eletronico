@@ -22,9 +22,9 @@ import java.util.Optional;
 public class ADMService {
 
     @Autowired
-    ADMMapper ADMMapper;
+    private ADMMapper ADMMapper;
     @Autowired
-    ClienteMapper clienteMapper;
+    private ClienteMapper clienteMapper;
 
     public List<User> buscaUsuarios(String name, UserRepository userRepository) {
         List<User> users = userRepository.findAllByOrderByUserNameAsc();

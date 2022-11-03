@@ -1,5 +1,7 @@
 package com.br.caixaEletronico.caixaEletronico.domain.entities;
 
+import com.br.caixaEletronico.caixaEletronico.domain.Regexp;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -11,7 +13,7 @@ public class Endereco {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotNull
-    @Pattern(regexp = "^\\d{5}-\\d{3}$")
+    @Pattern(regexp = Regexp.cep)
     @Column(nullable = false, length = 9)
     private String cep;
     @NotNull

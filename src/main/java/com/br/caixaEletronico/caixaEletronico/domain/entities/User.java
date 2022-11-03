@@ -1,6 +1,7 @@
 package com.br.caixaEletronico.caixaEletronico.domain.entities;
 
 
+import com.br.caixaEletronico.caixaEletronico.domain.Regexp;
 import com.br.caixaEletronico.caixaEletronico.domain.entities.Endereco;
 import com.br.caixaEletronico.caixaEletronico.domain.entities.Perfil;
 import com.br.caixaEletronico.caixaEletronico.domain.entities.Transacao;
@@ -39,7 +40,7 @@ public class User implements UserDetails {
     private String codigo;
     @NotNull
     @Column(nullable = false, length = 20)
-    @Pattern(regexp = "^\\d{2} \\d{5}-\\d{4}$")
+    @Pattern(regexp = Regexp.telefone)
     private String telefone;
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "endereco_id")

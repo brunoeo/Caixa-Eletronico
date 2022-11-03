@@ -6,10 +6,12 @@ import com.br.caixaEletronico.caixaEletronico.domain.entities.Transacao;
 import com.br.caixaEletronico.caixaEletronico.domain.entities.User;
 import com.br.caixaEletronico.caixaEletronico.dto.mapper.ClienteMapper;
 import com.br.caixaEletronico.caixaEletronico.dto.requisicoes.*;
+import com.br.caixaEletronico.caixaEletronico.repositories.EnderecoRepository;
 import com.br.caixaEletronico.caixaEletronico.repositories.TransacaoRepository;
 import com.br.caixaEletronico.caixaEletronico.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
@@ -24,17 +26,19 @@ import java.util.Optional;
 public class ClienteService {
 
     @Autowired
-    TransacaoRepository transacaoRepository;
+    private TransacaoRepository transacaoRepository;
+    @Autowired
+    private EnderecoRepository enderecoRepository;
 
     @Autowired
-    ClienteMapper clienteMapper;
+    private ClienteMapper clienteMapper;
 
     @Transactional
     public void atualiza(RequisicaoNovoCliente requisicao, UserRepository userRepository) {
         User user = AutenticacaoHelper.getUsuarioAutenticado();
         clienteMapper.atualizaUser(user, requisicao);
-
         userRepository.save(user);
+        enderecoRepository.save(user.getEndereco());
     }
     @Transactional
     public void deposita(RequisicaoDeposito requisicaoDeposito, User user, UserRepository userRepository) {
@@ -48,10 +52,10 @@ public class ClienteService {
     public Transacao realizaTransacao(User user, RequisicaoDeposito requisicaoDeposito){
         Transacao transacao = new Transacao();
         transacao.setTipoTransacao(TipoTransacao.DEPOSITO);
-        transacao.setValor(new BigDecimal(requisicaoDeposito.getDeposito()));
+        transacao.setValor(requisicaoDeposito.getDeposito());
         transacao.setDate(LocalDate.now());
         transacao.setUser(user);
-        user.setSaldo(new BigDecimal(requisicaoDeposito.getDeposito()).add(user.getSaldo()));
+        user.setSaldo(requisicaoDeposito.getDeposito().add(user.getSaldo()));
         return transacao;
     }
     @Transactional
@@ -59,7 +63,7 @@ public class ClienteService {
 
         Transacao transacao = new Transacao();
         transacao.setTipoTransacao(TipoTransacao.SAQUE);
-        BigDecimal valorSaque = new BigDecimal(requisicaoSaque.getSaque()).multiply(BigDecimal.valueOf(-1));
+        BigDecimal valorSaque = requisicaoSaque.getSaque().multiply(BigDecimal.valueOf(-1));
         transacao.setValor(valorSaque);
         transacao.setDate(LocalDate.now());
         transacao.setUser(user);
@@ -72,7 +76,7 @@ public class ClienteService {
     public void realizaTransacao(User user, RequisicaoPagamento requisicaoPagamento, UserRepository userRepository){
         Transacao transacao = new Transacao();
         transacao.setTipoTransacao(TipoTransacao.PAGAMENTO);
-        BigDecimal valorSaque = new BigDecimal(requisicaoPagamento.getValor()).multiply(BigDecimal.valueOf(-1));
+        BigDecimal valorSaque = requisicaoPagamento.getValor().multiply(BigDecimal.valueOf(-1));
         transacao.setValor(valorSaque);
         transacao.setDate(LocalDate.now());
         transacao.setUser(user);
@@ -82,8 +86,8 @@ public class ClienteService {
 
     }
 
-    public void validaSaldo(BindingResult result, User user, String valor) {
-        if (new BigDecimal(valor).compareTo(user.getSaldo()) > 0){
+    public void validaSaldo(BindingResult result, User user, BigDecimal valor) {
+        if (valor.compareTo(user.getSaldo()) > 0){
             result.rejectValue("saque", "requisicaoSaque", "Saldo Insuficiente");
         }
     }
@@ -100,7 +104,7 @@ public class ClienteService {
         }
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void realizaTransacao(List<User> users, RequisicaoTransferencia requisicaoTransferencia,
                                  UserRepository userRepository) {
         User userEnvia = users.get(0);
@@ -109,7 +113,7 @@ public class ClienteService {
 
         Transacao transacaoEnvia = new Transacao();
         transacaoEnvia.setTipoTransacao(TipoTransacao.TRANSFERENCIA);
-        BigDecimal valorSaque = new BigDecimal(requisicaoTransferencia.getValor()).multiply(BigDecimal.valueOf(-1));
+        BigDecimal valorSaque = requisicaoTransferencia.getValor().multiply(BigDecimal.valueOf(-1));
         transacaoEnvia.setValor(valorSaque);
         transacaoEnvia.setDate(LocalDate.now());
         transacaoEnvia.setUser(userEnvia);
@@ -117,10 +121,10 @@ public class ClienteService {
 
         Transacao transacaoRecebe = new Transacao();
         transacaoRecebe.setTipoTransacao(TipoTransacao.TRANSFERENCIA);
-        transacaoRecebe.setValor(new BigDecimal(requisicaoTransferencia.getValor()));
+        transacaoRecebe.setValor((requisicaoTransferencia.getValor()));
         transacaoRecebe.setDate(LocalDate.now());
         transacaoRecebe.setUser(userRecebe);
-        userRecebe.setSaldo(new BigDecimal(requisicaoTransferencia.getValor()).add(userRecebe.getSaldo()));
+        userRecebe.setSaldo(requisicaoTransferencia.getValor().add(userRecebe.getSaldo()));
 
         transacao.add(transacaoEnvia);
         transacao.add(transacaoRecebe);

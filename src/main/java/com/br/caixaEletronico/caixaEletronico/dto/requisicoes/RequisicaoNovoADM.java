@@ -1,5 +1,6 @@
 package com.br.caixaEletronico.caixaEletronico.dto.requisicoes;
 
+import com.br.caixaEletronico.caixaEletronico.domain.Regexp;
 import org.hibernate.validator.constraints.br.CPF;
 
 import javax.validation.constraints.NotBlank;
@@ -10,10 +11,10 @@ public class RequisicaoNovoADM {
     @NotBlank
     private String userName;
     @NotBlank
-    @Pattern(regexp = "^\\d{2} \\d{5}-\\d{4}$")
+    @Pattern(regexp = Regexp.telefone)
     private String telefone;
     @NotBlank
-    @Pattern(regexp = "^\\d{5}-\\d{3}$")
+    @Pattern(regexp = Regexp.cep)
     private String cep;
     @NotBlank
     private String num;
